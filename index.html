@@ -128,6 +128,62 @@
   color: var(--muted);
 }
 
+
+/* Publications: hoverable abstract card */
+.pub-title{
+  position: relative;
+  display: inline-block;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pub-title .abs{
+  position: absolute;
+  left: 0;
+  top: 1.6em;
+  width: min(650px, 85vw);
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--rule);
+  padding: 12px 14px;
+  border-radius: 10px;
+  box-shadow: 0 14px 40px rgba(0,0,0,.25);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity .15s ease, transform .15s ease, visibility .15s;
+  z-index: 50;
+}
+
+.pub-title:hover .abs,
+.pub-title:focus .abs{
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.pub-title:focus{
+  outline: 2px solid var(--link);
+  outline-offset: 3px;
+}
+
+.pub-meta{
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.pub-links{
+  margin-top: 4px;
+  font-size: 14px;
+}
+.pub-links a{
+  text-decoration: none;
+}
+.pub-links a:hover{
+  text-decoration: underline;
+}
+
     
   </style>
 </head>
@@ -221,15 +277,23 @@
       </span>
     </li>
 
-    <li>
-      <span class="pub-main"
-            title="Re-examines Doleac &amp; Mukherjee’s naloxone results, correcting data and design issues and finding no evidence for naloxone ‘moral hazard’.">
-        A closer look at Doleac and Mukherjee (2022) and the effects of naloxone access laws on opioid ER admissions
-      </span><br/>
-      <span class="pub-meta">
-        Economic Inquiry (2025). Post-print; revision letters; coverage in Filter Magazine; Dimensions.
-      </span>
-    </li>
+<li>
+  <a class="pub-title" href="https://doi.org/10.1111/ecin.13277" target="_blank" rel="noopener">
+    A closer look at Doleac and Mukherjee (2022) and the effects of naloxone access laws on opioid ER admissions
+    <span class="abs">
+      Replicates and stress-tests the “naloxone moral hazard” claim; documents issues with data, timing, and inference and finds no evidence that naloxone access laws increase opioid ER admissions.
+    </span>
+  </a>
+
+  <div class="pub-meta">Economic Inquiry (2025).</div>
+
+  <div class="pub-links">
+    <a href="https://www.researchgate.net/publication/377492875_A_closer_look_at_Doleac_and_Mukherjee_2022_and_the_effects_of_naloxone_access_laws_on_opioid_ER_admissions" target="_blank" rel="noopener">Post-print</a>
+    · <a href="https://www.dropbox.com/scl/fi/l2iki1wj88toqojstaxgr/Revision-letters.pdf?dl=0&rlkey=u4crvdh7zr6r1xj9952tu2jz9" target="_blank" rel="noopener">Revision letters</a>
+    · <a href="https://filtermag.org/naloxone-moral-hazard-replication-study/" target="_blank" rel="noopener">Media: Filter</a>
+  </div>
+</li>
+
 
     <li>
       <span class="pub-main"
