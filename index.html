@@ -35,33 +35,35 @@
     li{margin:8px 0;}
     .meta{color:var(--muted);}
 
-    /* Left-side hover buttons */
-    .sidenav{
-      position: fixed;
-      top: 140px;
-      left: 0;
-      z-index: 999;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding-left: 6px;
-    }
-    .sidenav a{
-      position: relative;
-      left: -120px;              /* mostly hidden */
-      width: 150px;
-      padding: 10px 12px;
-      border: 1px solid var(--rule);
-      border-left: none;
-      border-radius: 0 999px 999px 0;
-      background: var(--bg);
-      color: var(--fg);
-      text-decoration: none;
-      transition: left .18s ease;
-      font-size: 14px;
-    }
-    .sidenav a:hover{ left: 0; }
-    .sidenav a span{ color: var(--muted); }
+.sidenav{
+  position: fixed;
+  top: 140px;
+  left: 14px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidenav a{
+  left: 0;
+  width: auto;
+  padding: 6px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color .15s ease, border-color .15s ease, background .15s ease;
+  font-size: 13px;
+}
+
+.sidenav a:hover{
+  color: var(--fg);
+  border-color: var(--link);
+  background: rgba(127,127,127,0.08);
+}
+
 
     /* Mobile: hide sidenav (use normal scrolling) */
     @media (max-width: 900px){
