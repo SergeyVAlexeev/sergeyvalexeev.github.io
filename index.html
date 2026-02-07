@@ -4,7 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sergey V. Alexeev</title>
-  <meta name="description" content="Homepage of Sergey V. Alexeev." />
+  <meta name="description" content="Sergey V. Alexeev — health economist, biostatistician, epidemiologist." />
+
   <style>
     :root{
       --bg:#ffffff; --fg:#111111; --muted:#555; --rule:#e6e6e6; --link:#0b57d0;
@@ -15,72 +16,110 @@
     }
     html,body{margin:0; padding:0; background:var(--bg); color:var(--fg);}
     body{font:16px/1.6 ui-serif, Georgia, "Times New Roman", Times, serif;}
+    a{color:var(--link);}
+
     .wrap{max-width:var(--max); margin:0 auto; padding:56px 20px;}
     header{display:flex; flex-wrap:wrap; gap:18px; align-items:baseline;}
     h1{margin:0; font-size:42px; letter-spacing:-0.02em;}
     .sub{color:var(--muted); font-size:18px;}
-    nav{margin-top:16px; display:flex; flex-wrap:wrap; gap:14px;}
-    nav a{color:var(--link); text-decoration:none;}
-    nav a:hover{text-decoration:underline;}
+    .row{display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;}
+    .pill{border:1px solid var(--rule); border-radius:999px; padding:3px 10px; font-size:14px; color:var(--muted);}
+    .pill a{color:var(--link); text-decoration:none;}
+    .pill a:hover{text-decoration:underline;}
+
     hr{border:none; border-top:1px solid var(--rule); margin:28px 0;}
-    section{margin:26px 0;}
+    section{margin:28px 0;}
     h2{margin:0 0 10px; font-size:18px; text-transform:uppercase; letter-spacing:0.08em;}
     p{margin:10px 0;}
     ul{margin:8px 0 0 18px; padding:0;}
     li{margin:8px 0;}
     .meta{color:var(--muted);}
-    .row{display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;}
-    .pill{border:1px solid var(--rule); border-radius:999px; padding:3px 10px; font-size:14px; color:var(--muted);}
-    .pill a{color:var(--link); text-decoration:none;}
-    .pill a:hover{text-decoration:underline;}
-    a{color:var(--link);}
-    footer{margin-top:40px; font-size:14px; color:var(--muted);}
+
+    /* Left-side hover buttons */
+    .sidenav{
+      position: fixed;
+      top: 140px;
+      left: 0;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-left: 6px;
+    }
+    .sidenav a{
+      position: relative;
+      left: -120px;              /* mostly hidden */
+      width: 150px;
+      padding: 10px 12px;
+      border: 1px solid var(--rule);
+      border-left: none;
+      border-radius: 0 999px 999px 0;
+      background: var(--bg);
+      color: var(--fg);
+      text-decoration: none;
+      transition: left .18s ease;
+      font-size: 14px;
+    }
+    .sidenav a:hover{ left: 0; }
+    .sidenav a span{ color: var(--muted); }
+
+    /* Mobile: hide sidenav (use normal scrolling) */
+    @media (max-width: 900px){
+      .sidenav{ display:none; }
+      .wrap{ padding-top: 32px; }
+    }
   </style>
 </head>
+
 <body>
+
+  <!-- Left buttons -->
+  <nav class="sidenav" aria-label="Section navigation">
+    <a href="#about">About <span>↵</span></a>
+    <a href="#research">Research <span>↵</span></a>
+    <a href="#publications">Pubs <span>↵</span></a>
+    <a href="#mentorship">Mentorship <span>↵</span></a>
+    <a href="#consulting">Consulting <span>↵</span></a>
+    <a href="#teaching">Teaching <span>↵</span></a>
+    <a href="#contact">Contact <span>↵</span></a>
+  </nav>
+
   <div class="wrap">
     <header>
       <div>
         <h1>Sergey V. Alexeev</h1>
-        <div class="sub">[Your title / affiliation] · [City] · <a href="mailto:you@email.com">you@email.com</a></div>
+        <div class="sub">Sydney · USYD / UNSW · <a href="mailto:sergei.v.alexeev@gmail.com">sergei.v.alexeev@gmail.com</a></div>
         <div class="row" aria-label="Links">
+          <!-- You can upload CV.pdf into the repo and link it here -->
           <span class="pill"><a href="CV.pdf">CV (PDF)</a></span>
-          <span class="pill"><a href="[Google Scholar URL]">Google Scholar</a></span>
-          <span class="pill"><a href="[arXiv/SSRN URL]">arXiv/SSRN</a></span>
-          <span class="pill"><a href="[GitHub URL]">GitHub</a></span>
-          <span class="pill"><a href="[LinkedIn URL]">LinkedIn</a></span>
+          <span class="pill"><a href="https://orcid.org/" target="_blank" rel="noopener">ORCID</a></span>
+          <span class="pill"><a href="https://scholar.google.com/" target="_blank" rel="noopener">Google Scholar</a></span>
+          <span class="pill"><a href="https://www.researchgate.net/" target="_blank" rel="noopener">ResearchGate</a></span>
+          <span class="pill"><a href="https://x.com/" target="_blank" rel="noopener">X</a></span>
         </div>
       </div>
     </header>
-
-    <nav aria-label="Navigation">
-      <a href="#about">About</a>
-      <a href="#research">Research</a>
-      <a href="#publications">Publications</a>
-      <a href="#teaching">Teaching</a>
-      <a href="#service">Service</a>
-      <a href="#contact">Contact</a>
-    </nav>
 
     <hr />
 
     <section id="about">
       <h2>About</h2>
       <p>
-        I am a [role] at [institution]. My research is in <b>[area 1]</b>, <b>[area 2]</b>, and <b>[area 3]</b>.
-        Recent work includes [one concrete line about what you do / methods / applications].
+        I’m Sergey Alexeev — a Sydney-based health economist, biostatistician, and epidemiologist.
+        I’m affiliated with USYD and UNSW, serve on the Editorial Board of the <i>International Journal of Drug Policy</i>,
+        and I’m a member of the NSW PHSREC.
       </p>
       <p class="meta">
-        Keywords: [keyword1], [keyword2], [keyword3], [keyword4].
+        I’m currently exploring new opportunities in research and impact-driven work.
       </p>
     </section>
 
     <section id="research">
       <h2>Research</h2>
       <ul>
-        <li><b>Theme 1:</b> one sentence description. <span class="meta">(What’s the core question + your angle)</span></li>
-        <li><b>Theme 2:</b> one sentence description. <span class="meta">(Methods / applications)</span></li>
-        <li><b>Theme 3:</b> one sentence description. <span class="meta">(Any signature result)</span></li>
+        <li><b>Evaluation & causal inference:</b> trial-based and quasi-experimental evaluation; policy impacts in health and justice.</li>
+        <li><b>Health & social policy:</b> substance use, violence, harm reduction, and system-level interventions.</li>
+        <li><b>Applied microeconometrics:</b> predictive modelling and cost–benefit / decision support in messy real-world data.</li>
       </ul>
     </section>
 
@@ -88,47 +127,89 @@
       <h2>Selected publications</h2>
       <ul>
         <li>
-          <b>Paper title</b> (Year).<br/>
-          <span class="meta">With Coauthor A, Coauthor B.</span><br/>
-          <a href="[pdf link]">PDF</a> · <a href="[preprint link]">Preprint</a> · <a href="[code link]">Code</a>
+          <b>Risky alcohol use and violence against women: cause or consequence?</b>
+          <span class="meta">International Journal of Drug Policy (2025).</span>
         </li>
         <li>
-          <b>Paper title</b> (Year).<br/>
-          <span class="meta">With Coauthor A.</span><br/>
-          <a href="[pdf link]">PDF</a> · <a href="[preprint link]">Preprint</a>
+          <b>Dual-edged benefits of drug policing: a quarter century’s lesson from a heroin drought</b>
+          <span class="meta">Journal of Law and Economics (forthcoming).</span>
+        </li>
+        <li>
+          <b>A closer look at Doleac and Mukherjee (2022) and the effects of naloxone access laws on opioid ER admissions</b>
+          <span class="meta">Economic Inquiry (2025).</span>
+        </li>
+        <li>
+          <b>Transforming nursing assessment in acute hospitals: A cluster randomised controlled trial of an evidence-based nursing core assessment (the ENCORE trial)</b>
+          <span class="meta">International Journal of Nursing Studies (2024).</span>
+        </li>
+        <li>
+          <b>Harm reduction or amplification? The adverse impact of a supervised injection room on housing prices</b>
+          <span class="meta">Regional Science and Urban Economics (2023).</span>
         </li>
       </ul>
-      <p class="meta">Full list: <a href="[Scholar URL again]">Google Scholar</a></p>
+      <p class="meta">
+        Full list (with links): <a href="https://alexeev.pw/publications/" target="_blank" rel="noopener">Publications page</a>
+        · or <a href="https://scholar.google.com/" target="_blank" rel="noopener">Google Scholar</a>
+      </p>
+    </section>
+
+    <section id="mentorship">
+      <h2>Mentorship</h2>
+      <p>
+        I’m seeking PhD candidates who are passionate about (or keen to learn) economics, biostatistics, and health economics.
+      </p>
+      <ul>
+        <li><b>Extensive network & collaboration:</b> work with NSW government agencies and private sector partners.</li>
+        <li><b>Methodological breadth:</b> quasi-experimental designs and clinical trials.</li>
+        <li><b>Research idea bank:</b> I maintain a research ideas bank for prospective students.</li>
+      </ul>
+      <p class="meta">
+        Details: <a href="https://alexeev.pw/mentorship/" target="_blank" rel="noopener">Mentorship page</a>
+      </p>
+    </section>
+
+    <section id="consulting">
+      <h2>Consulting</h2>
+      <p>
+        Have a question you need answered or a messy dataset you’d like to make sense of?
+        Email me with a few lines on your problem, timelines, and constraints — I’ll reply with a simple scope and options.
+      </p>
+      <ul>
+        <li><b>Expert witness:</b> Fair Work Commission (AM2024/20); IRC of NSW (2025/187709).</li>
+        <li><b>Advisory:</b> Rennie Advisory; Deloitte.</li>
+        <li><b>Cross-agency work:</b> NSW Justice Health, Corrective Services NSW, and BOCSAR.</li>
+      </ul>
+      <p class="meta">
+        Details: <a href="https://alexeev.pw/consulting/" target="_blank" rel="noopener">Consulting page</a>
+      </p>
     </section>
 
     <section id="teaching">
       <h2>Teaching</h2>
       <ul>
-        <li><b>Course</b>, Institution. <span class="meta">Year–Year.</span> <a href="[materials link]">Materials</a></li>
-        <li><b>Course</b>, Institution. <span class="meta">Year.</span></li>
+        <li><b>Intermediate Microeconomics</b> <span class="meta">(2017–2019)</span></li>
+        <li><b>Predictive Analytics</b> <span class="meta">(2015–2017)</span></li>
+        <li><b>Data Mining and Data Analysis</b> <span class="meta">(2015–2017)</span></li>
+        <li><b>Time Series Econometrics</b> <span class="meta">(2015–2017)</span></li>
+        <li><b>Macroeconomics / Global Governance / Macropolicies / Financial Intermediation</b> <span class="meta">(2014–2015)</span></li>
+        <li><b>Intro Micro / Intro Macro</b> <span class="meta">(2012–2013)</span></li>
       </ul>
-    </section>
-
-    <section id="service">
-      <h2>Service & awards</h2>
-      <ul>
-        <li><b>Award</b>. <span class="meta">Year.</span></li>
-        <li><b>Referee</b> for [journals/conferences]. <span class="meta">Years.</span></li>
-      </ul>
+      <p class="meta">
+        Details: <a href="https://alexeev.pw/tutoring/" target="_blank" rel="noopener">Teaching page</a>
+      </p>
     </section>
 
     <section id="contact">
       <h2>Contact</h2>
       <p>
-        Email: <a href="mailto:you@email.com">you@email.com</a><br/>
-        [Department], [Institution]<br/>
-        [City, Country]
+        Email: <a href="mailto:sergei.v.alexeev@gmail.com">sergei.v.alexeev@gmail.com</a><br/>
+        Sydney, Australia
       </p>
     </section>
 
     <footer>
       <hr />
-      <div>Last updated: <span id="lu"></span></div>
+      <div class="meta">Last updated: <span id="lu"></span></div>
     </footer>
   </div>
 
