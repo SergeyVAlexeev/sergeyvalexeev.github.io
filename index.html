@@ -1,1 +1,140 @@
-<!DOCTYPE html><html><head><title>SergeyVAlexeev</title></head><body><h1>Hello, world!</h1><p>My GitHub Pages site is live.</p></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sergey V. Alexeev</title>
+  <meta name="description" content="Homepage of Sergey V. Alexeev." />
+  <style>
+    :root{
+      --bg:#ffffff; --fg:#111111; --muted:#555; --rule:#e6e6e6; --link:#0b57d0;
+      --max: 900px;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{ --bg:#0b0b0c; --fg:#eaeaea; --muted:#b8b8b8; --rule:#232323; --link:#7ab7ff; }
+    }
+    html,body{margin:0; padding:0; background:var(--bg); color:var(--fg);}
+    body{font:16px/1.6 ui-serif, Georgia, "Times New Roman", Times, serif;}
+    .wrap{max-width:var(--max); margin:0 auto; padding:56px 20px;}
+    header{display:flex; flex-wrap:wrap; gap:18px; align-items:baseline;}
+    h1{margin:0; font-size:42px; letter-spacing:-0.02em;}
+    .sub{color:var(--muted); font-size:18px;}
+    nav{margin-top:16px; display:flex; flex-wrap:wrap; gap:14px;}
+    nav a{color:var(--link); text-decoration:none;}
+    nav a:hover{text-decoration:underline;}
+    hr{border:none; border-top:1px solid var(--rule); margin:28px 0;}
+    section{margin:26px 0;}
+    h2{margin:0 0 10px; font-size:18px; text-transform:uppercase; letter-spacing:0.08em;}
+    p{margin:10px 0;}
+    ul{margin:8px 0 0 18px; padding:0;}
+    li{margin:8px 0;}
+    .meta{color:var(--muted);}
+    .row{display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;}
+    .pill{border:1px solid var(--rule); border-radius:999px; padding:3px 10px; font-size:14px; color:var(--muted);}
+    .pill a{color:var(--link); text-decoration:none;}
+    .pill a:hover{text-decoration:underline;}
+    a{color:var(--link);}
+    footer{margin-top:40px; font-size:14px; color:var(--muted);}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Sergey V. Alexeev</h1>
+        <div class="sub">[Your title / affiliation] · [City] · <a href="mailto:you@email.com">you@email.com</a></div>
+        <div class="row" aria-label="Links">
+          <span class="pill"><a href="CV.pdf">CV (PDF)</a></span>
+          <span class="pill"><a href="[Google Scholar URL]">Google Scholar</a></span>
+          <span class="pill"><a href="[arXiv/SSRN URL]">arXiv/SSRN</a></span>
+          <span class="pill"><a href="[GitHub URL]">GitHub</a></span>
+          <span class="pill"><a href="[LinkedIn URL]">LinkedIn</a></span>
+        </div>
+      </div>
+    </header>
+
+    <nav aria-label="Navigation">
+      <a href="#about">About</a>
+      <a href="#research">Research</a>
+      <a href="#publications">Publications</a>
+      <a href="#teaching">Teaching</a>
+      <a href="#service">Service</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <hr />
+
+    <section id="about">
+      <h2>About</h2>
+      <p>
+        I am a [role] at [institution]. My research is in <b>[area 1]</b>, <b>[area 2]</b>, and <b>[area 3]</b>.
+        Recent work includes [one concrete line about what you do / methods / applications].
+      </p>
+      <p class="meta">
+        Keywords: [keyword1], [keyword2], [keyword3], [keyword4].
+      </p>
+    </section>
+
+    <section id="research">
+      <h2>Research</h2>
+      <ul>
+        <li><b>Theme 1:</b> one sentence description. <span class="meta">(What’s the core question + your angle)</span></li>
+        <li><b>Theme 2:</b> one sentence description. <span class="meta">(Methods / applications)</span></li>
+        <li><b>Theme 3:</b> one sentence description. <span class="meta">(Any signature result)</span></li>
+      </ul>
+    </section>
+
+    <section id="publications">
+      <h2>Selected publications</h2>
+      <ul>
+        <li>
+          <b>Paper title</b> (Year).<br/>
+          <span class="meta">With Coauthor A, Coauthor B.</span><br/>
+          <a href="[pdf link]">PDF</a> · <a href="[preprint link]">Preprint</a> · <a href="[code link]">Code</a>
+        </li>
+        <li>
+          <b>Paper title</b> (Year).<br/>
+          <span class="meta">With Coauthor A.</span><br/>
+          <a href="[pdf link]">PDF</a> · <a href="[preprint link]">Preprint</a>
+        </li>
+      </ul>
+      <p class="meta">Full list: <a href="[Scholar URL again]">Google Scholar</a></p>
+    </section>
+
+    <section id="teaching">
+      <h2>Teaching</h2>
+      <ul>
+        <li><b>Course</b>, Institution. <span class="meta">Year–Year.</span> <a href="[materials link]">Materials</a></li>
+        <li><b>Course</b>, Institution. <span class="meta">Year.</span></li>
+      </ul>
+    </section>
+
+    <section id="service">
+      <h2>Service & awards</h2>
+      <ul>
+        <li><b>Award</b>. <span class="meta">Year.</span></li>
+        <li><b>Referee</b> for [journals/conferences]. <span class="meta">Years.</span></li>
+      </ul>
+    </section>
+
+    <section id="contact">
+      <h2>Contact</h2>
+      <p>
+        Email: <a href="mailto:you@email.com">you@email.com</a><br/>
+        [Department], [Institution]<br/>
+        [City, Country]
+      </p>
+    </section>
+
+    <footer>
+      <hr />
+      <div>Last updated: <span id="lu"></span></div>
+    </footer>
+  </div>
+
+  <script>
+    const d = new Date(document.lastModified);
+    document.getElementById('lu').textContent = d.toISOString().slice(0,10);
+  </script>
+</body>
+</html>
