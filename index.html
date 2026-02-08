@@ -145,7 +145,7 @@
 .pub-title{
   position: relative;
   display: inline-block;
-  font-weight: 650;
+  font-weight: 400;
   color: var(--fg);
   text-decoration: none;
 }
@@ -213,8 +213,20 @@
   text-decoration: underline;
 }
 
+/* Make non-title publication listings non-bold */
+.pub-main{font-weight:400}
+
     
-    
+    /* About section: image + text side-by-side */
+    .about-row{display:flex; gap:20px; align-items:flex-start;}
+    .about-pic{width:150px; height:auto; border-radius:6px; flex-shrink:0;}
+    .about-text{min-width:0}
+
+    @media (max-width:640px){
+      .about-row{flex-direction:column;}
+      .about-pic{width:100%; max-width:280px;}
+    }
+
   </style>
 </head>
 
@@ -223,7 +235,6 @@
   <!-- Left buttons -->
   <nav class="sidenav" aria-label="Section navigation">
     <a href="#about">About <span>↵</span></a>
-    <a href="#research">Research <span>↵</span></a>
     <a href="#publications">Pubs <span>↵</span></a>
     <a href="#mentorship">Mentorship <span>↵</span></a>
     <a href="#consulting">Consulting <span>↵</span></a>
@@ -241,218 +252,298 @@
 
     <hr />
 
+<!-- <section id="about">
+  <h2>About</h2>
+
+  <div class="about-row">
+    <img class="about-pic" src="Alexeev Headshot.jpg" alt="Sergey Alexeev">
+    <div class="about-text">
+      <p>
+        I am an economist–statistician specialising in trial-based and quasi-experimental evaluation, predictive modelling, and cost–benefit analysis. I work with linked administrative and clinical datasets to answer policy questions across
+        health, labour, housing, and criminal justice, and I build reproducible pipelines in R/Stata/Python/SQL for secure data environments.
+      </p>
+
+      <p>
+        I am currently a Senior Research Associate at UNSW’s Nura Gili Centre for Indigenous Programs, and an Adjunct Senior Lecturer at the University of Sydney’s NHMRC Clinical Trials Centre.
+      </p>
+
+      <p class="handles">
+        <a href="https://research.unsw.edu.au/people/dr-sergey-alexeev" target="_blank" rel="noopener">UNSW profile</a>
+        · <a href="https://www.dropbox.com/scl/fi/fy4ibvdpfu98hg86s7ptq/SA-CV-online.pdf?rlkey=zv4r3jue6tl0v71xlhdexwl5z&dl=0" target="_blank" rel="noopener">CV</a>
+        · <a href="https://www.dropbox.com/scl/fi/bk27rlmxm4ta3t6cjogau/Research-Statement-online.pdf?rlkey=ejscnfbykgxwcrggk3e1tk1nw&dl=0" target="_blank" rel="noopener">Research</a> / <a href="https://www.dropbox.com/scl/fi/5bkrxyy1seo1x433b6ynr/Teaching-Statement-online.pdf?rlkey=86skii0gcp67amy76mrqeca1x&dl=0" target="_blank" rel="noopener">Teaching statements</a>
+        · <a href="https://scholar.google.com/citations?hl=en&inst=11461220086556808362&user=HmmERJsAAAAJ" target="_blank" rel="noopener">Google Scholar</a>
+        · <a href="https://orcid.org/0000-0003-2413-2115" target="_blank" rel="noopener">ORCID</a>
+        · <a href="https://www.researchgate.net/profile/Sergey-Alexeev-4" target="_blank" rel="noopener">ResearchGate</a>
+        · <a href="https://x.com/SergeyVAlexeev" target="_blank" rel="noopener">X</a>
+        · <a href="https://www.linkedin.com/in/sergeyvalexeev/" target="_blank" rel="noopener">LinkedIn</a>
+      </p>
+    </div>
+  </div>
+
+</section> -->
+
 <section id="about">
   <h2>About</h2>
 
-  <p>
-    I am an economist–statistician specialising in trial-based and quasi-experimental evaluation, predictive modelling, and cost–benefit analysis. I work with linked administrative and clinical datasets to answer policy questions across
-    health, labour, housing, and criminal justice, and I build reproducible pipelines in R/Stata/Python/SQL for secure data environments.
-  </p>
+  <div class="about-row">
+    <img class="about-pic" src="Alexeev Headshot.jpg" alt="Sergey Alexeev">
+    <div class="about-text">
+      <p>
+        I am an economist–statistician specialising in trial-based and quasi-experimental evaluation, predictive modelling, and cost–benefit analysis. I work with linked administrative and clinical datasets to answer policy questions across
+        health, labour, housing, and criminal justice, and I build reproducible pipelines in R/Stata/Python/SQL for secure data environments.
+      </p>
 
-  <p>
-    I am currently a Senior Research Associate at UNSW’s Nura Gili Centre for Indigenous Programs, and an Adjunct Senior Lecturer at the University of Sydney’s NHMRC Clinical Trials Centre.
-  </p>
+      <p>
+  I am currently a Senior Research Associate at UNSW’s Nura Gili Centre for Indigenous Programs, and an Adjunct Senior Lecturer at the University of Sydney’s NHMRC Clinical Trials Centre.
+  I serve on the
+  <a href="https://www.sciencedirect.com/journal/international-journal-of-drug-policy/about/editorial-board" target="_blank" rel="noopener">Editorial Board</a>
+  of the <i>International Journal of Drug Policy</i>, and I’m a member of the
+  <a href="https://www.cancer.nsw.gov.au/research-and-data/nsw-population-health-services-research-ethics-com/committee-members" target="_blank" rel="noopener">NSW Population &amp; Health Services Research Ethics Committee (PHSREC)</a>.
+</p>
 
-  <p class="handles">
-    <a href="https://research.unsw.edu.au/people/dr-sergey-alexeev" target="_blank" rel="noopener">UNSW profile</a>
-    · <a href="https://www.dropbox.com/scl/fi/fy4ibvdpfu98hg86s7ptq/SA-CV-online.pdf?rlkey=zv4r3jue6tl0v71xlhdexwl5z&dl=0" target="_blank" rel="noopener">CV</a>
-    · <a href="https://www.dropbox.com/scl/fi/bk27rlmxm4ta3t6cjogau/Research-Statement-online.pdf?rlkey=ejscnfbykgxwcrggk3e1tk1nw&dl=0" target="_blank" rel="noopener">Research statement</a>
-    · <a href="https://www.dropbox.com/scl/fi/5bkrxyy1seo1x433b6ynr/Teaching-Statement-online.pdf?rlkey=86skii0gcp67amy76mrqeca1x&dl=0" target="_blank" rel="noopener">Teaching statement</a>
-    · <a href="https://scholar.google.com/citations?hl=en&inst=11461220086556808362&user=HmmERJsAAAAJ" target="_blank" rel="noopener">Google Scholar</a>
-    · <a href="https://orcid.org/0000-0003-2413-2115" target="_blank" rel="noopener">ORCID</a>
-    · <a href="https://www.researchgate.net/profile/Sergey-Alexeev-4" target="_blank" rel="noopener">ResearchGate</a>
-    · <a href="https://x.com/SergeyVAlexeev" target="_blank" rel="noopener">X</a>
-    · <a href="https://www.linkedin.com/in/sergeyvalexeev/" target="_blank" rel="noopener">LinkedIn</a>
-  </p>
+
+      <!-- <p>
+        I am currently a Senior Research Associate at UNSW’s Nura Gili Centre for Indigenous Programs, and an Adjunct Senior Lecturer at the University of Sydney’s NHMRC Clinical Trials Centre. I serve on the Editorial Board of the
+        <i>International Journal of Drug Policy</i> and I’m a member of the NSW Population &amp; Health Services Research Ethics Committee (PHSREC).
+      </p> -->
+
+      <p class="handles">
+        <a href="https://research.unsw.edu.au/people/dr-sergey-alexeev" target="_blank" rel="noopener">UNSW profile</a>
+        · <a href="https://www.dropbox.com/scl/fi/fy4ibvdpfu98hg86s7ptq/SA-CV-online.pdf?rlkey=zv4r3jue6tl0v71xlhdexwl5z&dl=0" target="_blank" rel="noopener">CV</a>
+        · <a href="https://www.dropbox.com/scl/fi/bk27rlmxm4ta3t6cjogau/Research-Statement-online.pdf?rlkey=ejscnfbykgxwcrggk3e1tk1nw&dl=0" target="_blank" rel="noopener">Research</a> / <a href="https://www.dropbox.com/scl/fi/5bkrxyy1seo1x433b6ynr/Teaching-Statement-online.pdf?rlkey=86skii0gcp67amy76mrqeca1x&dl=0" target="_blank" rel="noopener">Teaching statements</a>
+        · <a href="https://scholar.google.com/citations?hl=en&inst=11461220086556808362&user=HmmERJsAAAAJ" target="_blank" rel="noopener">Google Scholar</a>
+        · <a href="https://orcid.org/0000-0003-2413-2115" target="_blank" rel="noopener">ORCID</a>
+        · <a href="https://www.researchgate.net/profile/Sergey-Alexeev-4" target="_blank" rel="noopener">ResearchGate</a>
+        · <a href="https://x.com/SergeyVAlexeev" target="_blank" rel="noopener">X</a>
+        · <a href="https://www.linkedin.com/in/sergeyvalexeev/" target="_blank" rel="noopener">LinkedIn</a>
+      </p>
+    </div>
+  </div>
 
 </section>
 
 
 
-
-    <section id="research">
+    <!-- <section id="research">
       <h2>Research</h2>
       <ul>
         <li><b>Evaluation & causal inference:</b> trial-based and quasi-experimental evaluation; policy impacts in health and justice.</li>
         <li><b>Health & social policy:</b> substance use, violence, harm reduction, and system-level interventions.</li>
         <li><b>Applied microeconometrics:</b> predictive modelling and cost–benefit / decision support in messy real-world data.</li>
       </ul>
-    </section>
+    </section> -->
 
 <section id="publications">
   <h2>Publications</h2>
 
-  <p class="meta">
-    Journal articles (hover over the title for a one-line abstract). Most recent first.
-  </p>
+
+  <h3>Journal articles</h3>
+  <p class="meta">Journal articles (hover over the title for a one-line abstract). Most recent first.</p>
 
   <ul class="publist">
-<li>
-  <a class="pub-title" href="PUT_DOI_OR_JOURNAL_LINK" target="_blank" rel="noopener">
-    Risky alcohol use and violence against women: cause or consequence?
-    <span class="abs">PUT_YOUR_WORDPRESS_ABSTRACT_TEXT_HERE</span>
-  </a>
-  <div class="pub-meta">International Journal of Drug Policy (2025).</div>
-  <div class="pub-links">
-    <a href="PUT_POSTPRINT_LINK">Post-print</a> · <a href="PUT_DIMENSIONS_LINK">Dimensions</a>
-  </div>
-</li>
+
+  <li>
+    <a class="pub-title" href="https://doi.org/10.1016/j.drugpo.2025.104981" target="_blank" rel="noopener">
+      Risky alcohol use and violence against women: cause or consequence?
+      <span class="abs">Bigger drinking bouts raise women’s risk of physical violence, and being assaulted tends to increase how much they drink later—suggesting targeted prevention and post-incident alcohol support could help.</span>
+    </a>
+    <div class="pub-links">
+      <a href="https://doi.org/10.1016/j.drugpo.2025.104981" target="_blank" rel="noopener">International Journal of Drug Policy (2025)</a>
+      · <a href="https://www.researchgate.net/publication/392625101_Corrigendum_to_Risky_alcohol_use_and_violence_against_women_cause_or_consequence_2025_104981" target="_blank" rel="noopener">Post-print</a>
+      · <a href="https://app.dimensions.ai/details/publication/pub.1169012850?and_facet_source=author&amp;and_facet_source=orcid&amp;and_facet_source=researcher&amp;and_facet_source=journal&amp;and_facet_source=repository&amp;and_facet_source=book&amp;and_facet_source=book_series" target="_blank" rel="noopener">Dimensions</a>
+    </div>
+  </li>
+
+  <li>
+    <a class="pub-title" href="https://www.dropbox.com/scl/fi/ls5sk62g96ce4ro1ttfx6/Heroin-Drought.pdf?rlkey=p40zg7ip7m0jlx9tzum7kptu8&amp;st=p2g01lbf&amp;dl=0" target="_blank" rel="noopener">
+      Dual-edged benefits of drug policing: a quarter century’s lesson from a heroin drought
+      <span class="abs">We develop a strong triple difference design, with variation across crimes and areas, to quantify the impact of Australia's 2001 heroin shortage on crime, providing precise and uniform evidence on both the immediate and long-term effects of drug law enforcement. Applying the design to 25 years of monthly postcode data, we show that crime experiences an 8.4% surge in the first month, followed by a 1% decrease every 13 months, resulting in a cumulative 22% reduction over 18 years. This translates to an annual saving of approximately AUD 2.21 billion from crimes averted, highlighting that the benefits of supply-side drug policies are significant and often underestimated due to their delayed realization. We conclude that supply-side policies have a more substantial role in reducing drug-related harm than is conventionally assumed.</span>
+    </a>
+<div class="pub-links">
+  <a href="https://www.dropbox.com/scl/fi/ls5sk62g96ce4ro1ttfx6/Heroin-Drought.pdf?rlkey=p40zg7ip7m0jlx9tzum7kptu8&st=p2g01lbf&dl=0" target="_blank" rel="noopener">Journal of Law and Economics (forthcoming)</a>
+  · <a href="https://www.researchgate.net/publication/361601897_Dual-edged_benefits_of_drug_policing_a_quarter_century's_lesson_from_a_heroin_drought" target="_blank" rel="noopener">Post-print</a>
+  · <a href="https://www.smh.com.au/national/pushing-up-the-price-of-heroin-cut-crime-why-isn-t-the-same-thing-happening-with-tobacco-20260203-p5nz6c.html" target="_blank" rel="noopener">The Age</a>
+  · <a href="https://x.com/SergeyVAlexeev/status/2018781981635698808" target="_blank" rel="noopener">X thread</a>
+</div>
+  </li>
+
+  <li>
+    <a class="pub-title" href="https://doi.org/10.1111/ecin.13277" target="_blank" rel="noopener">
+      A closer look at Doleac and Mukherjee (2022) and the effects of naloxone access laws on opioid ER admissions
+      <span class="abs">Doleac and Mukherjee (2022) conclude that broadening access to a life-saving drug — naloxone — does not reduce opioid-related mortality as the drug simultaneously encourages riskier drug use. I show issues with their data, design, and estimation methods. For example, their Google Search has an unverifiable origin, the law timing is incorrect, and the statistical inference is invalid. Correcting these issues within a triple difference design shows that naloxone, contrary to their findings, does not increase ER opioid admissions. I conclude that the moral hazard (and the ensuing adverse consequences) of naloxone use lacks empirical support.</span>
+    </a>
+    <div class="pub-links">
+      <a href="https://doi.org/10.1111/ecin.13277" target="_blank" rel="noopener">Economic Inquiry (2025)</a>
+      · <a href="https://www.researchgate.net/publication/377492875_A_closer_look_at_Doleac_and_Mukherjee_2022_and_the_effects_of_naloxone_access_laws_on_opioid_ER_admissions" target="_blank" rel="noopener">Post-print</a>
+      · <a href="https://www.dropbox.com/scl/fi/l2iki1wj88toqojstaxgr/Revision-letters.pdf?rlkey=u4crvdh7zr6r1xj9952tu2jz9&amp;dl=0" target="_blank" rel="noopener">Revision letters</a>
+      · <a href="https://filtermag.org/naloxone-moral-hazard-replication-study/" target="_blank" rel="noopener">Filter</a>
+      · <a href="https://app.dimensions.ai/details/publication/pub.1168910572?and_facet_source=author&amp;and_facet_source=orcid&amp;and_facet_source=researcher&amp;and_facet_source=journal&amp;and_facet_source=repository&amp;and_facet_source=book&amp;and_facet_source=book_series" target="_blank" rel="noopener">Dimensions</a>
+    </div>
+  </li>
+
+  <li>
+    <a class="pub-title" href="https://doi.org/10.1016/j.ijnurstu.2024.104742" target="_blank" rel="noopener">
+      Transforming nursing assessment in acute hospitals: A cluster randomised controlled trial of an evidence-based nursing core assessment (the ENCORE trial)
+      <span class="abs">Patient safety is threatened when early signs of clinical deterioration are missed or not acted upon. A clinical–academic partnership developed ENCORE—a complex intervention facilitated at the ward level for proactive nursing surveillance. Testing ENCORE on 29 randomly selected general wards across 5 Australian sites, we showed that the intervention has protective effects for patients with low complexity, enabling frontline teams to respond locally. It also redistributed medical emergency team activations and unplanned intensive care unit admissions, mobilizing higher rates of rescue for patients with multimorbidity.</span>
+    </a>
+    <div class="pub-links">
+      <a href="https://doi.org/10.1016/j.ijnurstu.2024.104742" target="_blank" rel="noopener">International Journal of Nursing Studies (2024)</a>
+      · <a href="https://www.researchgate.net/publication/381116751_Transforming_nursing_assessment_in_acute_hospitals_A_cluster_randomised_controlled_trial_of_an_evidence-based_nursing_core_assessment_the_ENCORE_trial" target="_blank" rel="noopener">Post-print</a>
+      · <a href="https://anmj.org.au/nurse-assessment-model-can-help-prevent-patient-deterioration/" target="_blank" rel="noopener">ANMJ</a>
+      · <a href="https://medicalxpress.com/news/2024-04-nurses-patients-deteriorate.html" target="_blank" rel="noopener">Medical Xpress</a>
+      · <a href="https://www.miragenews.com/nurses-may-help-prevent-patients-from-1213644/" target="_blank" rel="noopener">Mirage.News</a>
+      · <a href="https://app.dimensions.ai/details/publication/pub.1162238614?and_facet_source=author&amp;and_facet_source=orcid&amp;and_facet_source=researcher&amp;and_facet_source=journal&amp;and_facet_source=repository&amp;and_facet_source=book&amp;and_facet_source=book_series" target="_blank" rel="noopener">Dimensions</a>
+    </div>
+  </li>
+
+  <li>
+    <a class="pub-title" href="https://doi.org/10.1016/j.regsciurbeco.2022.103916" target="_blank" rel="noopener">
+      Harm reduction or amplification? The adverse impact of a supervised injection room on housing prices
+      <span class="abs">A medically supervised injecting room —a facility for the safe injection of illicit drugs—is an example of a harm reduction approach against opioid epidemics. An economic theory of moral hazard suggests that such a room can intensify drug use by reducing the risk of lethal overdose, mediating an increase in crime, death, and nuisance behavior, thus, depressing local urban development. Beyond that, negative media coverage can generate similar adverse outcomes even without any factual drug intensification. Accordingly, using non-parametric methods and spatial double and triple difference design on the data from Victoria, Australia, we show that the room's opening causes around 5%–7% reduction in housing value. We conclude that the harm reduction approach can have nontrivial indirect costs outside health domains.</span>
+    </a>
+    <div class="pub-links">
+      <a href="https://doi.org/10.1016/j.regsciurbeco.2022.103916" target="_blank" rel="noopener">Regional Science and Urban Economics (2023)</a>
+      · <a href="https://www.researchgate.net/publication/366075220_Harm_reduction_or_amplification_The_adverse_impact_of_a_supervised_injection_room_on_housing_prices" target="_blank" rel="noopener">Post-print</a>
+      · <a href="https://twitter.com/SergeyVAlexeev/status/1616259867291054080" target="_blank" rel="noopener">Twitter thread</a>
+      · <a href="https://youtu.be/pYBr6JSe7jA?si=uxyL3Ozik7sdiIL7" target="_blank" rel="noopener">7NEWS</a>
+      · <a href="https://www.theage.com.au/national/victoria/expert-suggests-safe-injecting-room-has-driven-down-property-values-20221228-p5c8yk.html" target="_blank" rel="noopener">The Age</a>
+      · <a href="https://www.news.com.au/national/victoria/richmond-safe-injecting-room-has-cost-homeowners-thousands-according-to-new-study/news-story/26ac684a7238353eed7b31dba379cebc" target="_blank" rel="noopener">news.com.au</a>
+      · <a href="https://www.hit.com.au/story/richmond-s-drug-injecting-room-to-stay-near-local-school-217486" target="_blank" rel="noopener">Hit Network</a>
+      · <a href="https://www.cairnspost.com.au/news/national/the-effect-is-large-richmond-safe-injecting-rooms-60k-cost-to-devastated-homeowners/news-story/26ac684a7238353eed7b31dba379cebc" target="_blank" rel="noopener">Cairns Post</a>
+      · <a href="https://www.brisbanetimes.com.au/national/victoria/safe-injecting-room-s-opening-near-school-cut-housing-value-20221229-p5c8zb.html" target="_blank" rel="noopener">Brisbane Times</a>
+      · <a href="https://app.dimensions.ai/details/publication/pub.1156077099?and_facet_source=author&amp;and_facet_source=orcid&amp;and_facet_source=researcher&amp;and_facet_source=journal&amp;and_facet_source=repository&amp;and_facet_source=book&amp;and_facet_source=book_series" target="_blank" rel="noopener">Dimensions</a>
+    </div>
+  </li>
+
+  <li>
+    <a class="pub-title" href="https://doi.org/10.1108/IJM-08-2021-0475" target="_blank" rel="noopener">
+      Wage equation misrepresents gay wage discrimination: overlooked evidence from Russia
+      <span class="abs">Only data from developed countries were used to estimate the sexual orientation difference in wages. This paper is the first that identifies the wage discrimination of gay men in Russia -- a country where institutional discrimination and ignorance against gay men are known to present. Gays are identified as men who reported having sex with other men in several waves of the national household survey. A wage equation is used to estimate the gay wage penalty. Extending the wage equation to implement a difference-in-difference design, the paper also ensured to evaluate the effect of the gay-propaganda law of 2013 on gay wages. No wage discrimination is identified. The law also has no adverse effect on gay wages. These results are implausible and add to existing evidence that gay discrimination measured with wage equation suffers from endogeneity and should be interpreted with caution. Particular caution should be exercised in cross-sectional and time-series comparisons, as a tendency to report the orientation honestly and unobserved confounders vary by location and time. Cross-country comparison and theoretical generalizations are premature, and better identification strategies are needed to understand sexual orientation differences. Policymakers should be aware that in both discriminatory and equitable environments, there may be hidden inequality even if researchers do not detect it.</span>
+    </a>
+    <div class="pub-links">
+      <a href="https://doi.org/10.1108/IJM-08-2021-0475" target="_blank" rel="noopener">International Journal of Manpower (2022)</a>
+      · <a href="https://www.researchgate.net/publication/363122714_Wage_equation_misrepresents_gay_wage_discrimination_Overlooked_evidence_from_Russia" target="_blank" rel="noopener">Post-print</a>
+      · <a href="https://app.dimensions.ai/details/publication/pub.1148812414?and_facet_source=author&amp;and_facet_source=orcid&amp;and_facet_source=researcher&amp;and_facet_source=journal&amp;and_facet_source=repository&amp;and_facet_source=book&amp;and_facet_source=book_series" target="_blank" rel="noopener">Dimensions</a>
+    </div>
+  </li>
+
+  <li>
+    <a class="pub-title" href="https://doi.org/10.1016/j.jebo.2022.05.035" target="_blank" rel="noopener">
+      Fines for illicit drug use do not prevent future crime: evidence from randomly assigned judges
+      <span class="abs">This study uses judicial leniency as an instrumental variable to estimate the effect on recidivism of a monetary penalty for using or possessing a prohibited drug. Using data from the state of New South Wales, Australia, we find that fines have no measurable effect on recidivism. In contrast, ordinary least square estimates mistakenly suggest that fines increase recidivism risk. The results add to existing evidence that sanctions are ineffective in changing drug use behaviour. This should encourage policymakers to seek other ways of stopping or reducing illicit drug consumption among active users.</span>
+    </a>
+    <div class="pub-links">
+      <a href="https://doi.org/10.1016/j.jebo.2022.05.035" target="_blank" rel="noopener">Journal of Economic Behavior and Organization (2022)</a>
+      · <a href="https://www.researchgate.net/publication/361844461_Fines_for_illicit_drug_use_do_not_prevent_future_crime_evidence_from_randomly_assigned_judges" target="_blank" rel="noopener">Post-print</a>
+      · <a href="https://www.daconnections.com.au/opinion/fines-for-illicit-drug-use-do-not-prevent-future-crime.html" target="_blank" rel="noopener">Drug and Alcohol Research Connections</a>
+      · <a href="https://app.dimensions.ai/details/publication/pub.1145066175?and_facet_source=author&amp;and_facet_source=orcid&amp;and_facet_source=researcher&amp;and_facet_source=journal&amp;and_facet_source=repository&amp;and_facet_source=book&amp;and_facet_source=book_series" target="_blank" rel="noopener">Dimensions</a>
+    </div>
+  </li>
+
+  <li>
+    <a class="pub-title" href="https://onlinelibrary.wiley.com/doi/10.1111/ecot.12330" target="_blank" rel="noopener">
+      Technical change and wage premiums amongst skilled labor: evidence from the economic transition
+      <span class="abs">I present reduced-form and structural evidence that the reorganization of the Russian economy in the post-transitional period increased the demand on law and business graduates. This demand shock provides a novel unified explanation of the Russian wage structure for 1985–2015. I then show that this shock is a common feature of all transitional economies, and it contributed to the transformational recession. The demand behaviour is identified with a new skill-biased technical change model of demand for skills with three production inputs (high school graduates and bachelor-level educations with two majors), showing that a technology shift that favours a particular skill might emerge within the skilled group rather than between skilled and unskilled. This is relevant because similar shifts (e.g., data scientists vs. liberal arts) emerge today in the frontier economies that adopt new general-purpose technologies (e.g., machine learning). Thus, this paper informs policymakers today on tools to counteract a potential drop in economic equality and performance that result from this adoption.</span>
+    </a>
+    <div class="pub-links">
+      <a href="https://onlinelibrary.wiley.com/doi/10.1111/ecot.12330" target="_blank" rel="noopener">Economics of Transition (2022)</a>
+      · <a href="https://www.researchgate.net/publication/343877771_Technical_change_and_wage_premiums_amongst_skilled_labor_evidence_from_the_economic_transition" target="_blank" rel="noopener">Post-print</a>
+      · <a href="https://blogs.lse.ac.uk/europpblog/2022/05/11/western-sanctions-are-only-strengthening-putins-grip-on-power/" target="_blank" rel="noopener">EUROPP</a>
+      · <a href="https://www.dropbox.com/scl/fi/jd578w47vr4lsf34ucqlm/RU_PREM_GSOM.pdf?dl=0&amp;rlkey=t8ckfx7uj470wfbk66govsjzh" target="_blank" rel="noopener">Slides</a>
+    </div>
+  </li>
+
+  <li>
+    <a class="pub-title" href="https://doi.org/10.1111/dar.13128" target="_blank" rel="noopener">
+      Changes in and correlates of Australian public attitudes toward illicit drug use
+      <span class="abs">The present study explores Australian public support for more lenient treatment of persons found in possession of small amounts of illegal drugs for personal use. Data for the study are drawn from the 2013, 2016 and 2019 National Drug Strategy Household Surveys. Bivariate associations were tested using χ² tests corrected for survey design. Multivariate analyses of public support for legalisation and imprisonment involved logistic regression. Multivariate analyses of public preferences for various responses to those found in possession of illicit drugs involved the use of multinomial regression. Support for legalising personal use of three drugs (cannabis, ecstasy and cocaine) has risen significantly since 2013 but remained stable (and low) for two (heroin and methamphetamine). Support for no action, a caution or a warning has grown for those found in possession of cannabis, ecstasy and heroin for personal use but not for those found in possession of methamphetamine. There is, however, more support for responding to this group with treatment, education or a small fine than there is for imprisonment. There is strong support for legalising use of cannabis. There is little support for legalising use of ecstasy and cocaine but growing public support for a less punitive approach to those who use these drugs. There is little public support for a change in the current approach to heroin and methamphetamine.</span>
+    </a>
+    <div class="pub-links">
+      <a href="https://doi.org/10.1111/dar.13128" target="_blank" rel="noopener">Drug and Alcohol Review (2021)</a>
+      · <a href="https://www.researchgate.net/publication/349107838_Changes_in_and_correlates_of_Australian_public_attitudes_toward_illicit_drug_use" target="_blank" rel="noopener">Post-print</a>
+      · <a href="https://www.theguardian.com/australia-news/2019/sep/05/australians-back-decriminalising-drugs-for-personal-use-survey-finds" target="_blank" rel="noopener">The Guardian</a>
+      · <a href="https://www.forbes.com/sites/tarahaelle/2019/09/06/study-australians-increasingly-support-decriminalizing-or-legalizing-illicit-drugs/" target="_blank" rel="noopener">Forbes</a>
+      · <a href="https://app.dimensions.ai/details/publication/pub.1123295202?and_facet_source=author&amp;and_facet_source=orcid&amp;and_facet_source=researcher&amp;and_facet_source=journal&amp;and_facet_source=repository&amp;and_facet_source=book&amp;and_facet_source=book_series" target="_blank" rel="noopener">Dimensions</a>
+    </div>
+  </li>
+
+  <li>
+    <a class="pub-title" href="https://doi.org/10.1016/j.drugpo.2021.103281" target="_blank" rel="noopener">
+      The Australian ready-to-drink beverages tax missed its target age group
+      <span class="abs">During 2008 and 2009, the Australian Government increased the tax on ready-to-drink alcoholic beverages by 70% to discourage drinking among adolescents. To evaluate the tax, we use the difference-in-difference and comparative interrupted time series estimators, where age is used to define the control and treatment groups. This methodology is applied to the Household Income and Labour Dynamics in Australia survey. We show that the tax did not affect the alcohol consumption of those aged under 25 (the tax targeted age group) but substantially reduced drinking among those aged 25–69, reducing their average daily consumption of standard drinks by 8.9% from 2010 to 2018. The age group under 25 did not respond to the tax likely because of product substitution. Alcohol price policy may need to acknowledge complex substitute/complement relationships between beverages and consider a floor price on alcohol or a uniform volumetric tax per standard drink.</span>
+    </a>
+    <div class="pub-links">
+      <a href="https://doi.org/10.1016/j.drugpo.2021.103281" target="_blank" rel="noopener">International Journal of Drug Policy (2021)</a>
+      · <a href="https://www.researchgate.net/publication/353625701_The_Australian_ready-to-drink_beverages_tax_missed_its_target_age_group" target="_blank" rel="noopener">Post-print</a>
+      · <a href="https://twitter.com/SergeyVAlexeev/status/1437614229255716865" target="_blank" rel="noopener">Twitter thread</a>
+      · <a href="https://austaxpolicy.com/australias-current-alcohol-tax-system-impedes-public-health-policy/" target="_blank" rel="noopener">Austaxpolicy</a>
+      · <a href="https://app.dimensions.ai/details/publication/pub.1136146381?and_facet_source=author&amp;and_facet_source=orcid&amp;and_facet_source=researcher&amp;and_facet_source=journal&amp;and_facet_source=repository&amp;and_facet_source=book&amp;and_facet_source=book_series" target="_blank" rel="noopener">Dimensions</a>
+    </div>
+  </li>
+
+  <li>
+    <a class="pub-title" href="https://doi.org/10.1016/j.jhe.2020.101710" target="_blank" rel="noopener">
+      The role of imputed rents in intergenerational income mobility in three countries
+      <span class="abs">This is the first paper that studies the effects of including non-monetary income from housing (imputed rent) in the measure of income on intergenerational income mobility. Using national panel data sets for Australia, the United States and Germany, it is shown that only Australian society becomes 22% less mobile as measured by an intergenerational rank correlation. This decrease is also confirmed using the intergenerational transition matrices. As a result, cross-regional comparisons of intergenerational income mobility may be misleading, especially using tax data as imputed rent is rarely taxed.</span>
+    </a>
+    <div class="pub-links">
+      <a href="https://doi.org/10.1016/j.jhe.2020.101710" target="_blank" rel="noopener">Journal of Housing Economics (2020)</a>
+      · <a href="https://www.researchgate.net/publication/339611985_The_role_of_imputed_rents_in_intergenerational_income_mobility_in_three_countries" target="_blank" rel="noopener">Post-print</a>
+      · <a href="https://twitter.com/SergeyVAlexeev/status/1368323258324387840" target="_blank" rel="noopener">Twitter thread</a>
+      · <a href="https://cepr.org/voxeu/columns/comparing-effects-homeownership-intergenerational-income-mobility-us-germany-and" target="_blank" rel="noopener">VoxEU</a>
+      · <a href="https://www.uts.edu.au/news/business-law/parental-home-provides-leg-income-ladder" target="_blank" rel="noopener">UTS News</a>
+      · <a href="https://austaxpolicy.com/covid-19-and-australias-housing-crisis-how-the-intergenerational-impact-can-go-undetected/" target="_blank" rel="noopener">Austaxpolicy</a>
+      · <a href="https://theconversation.com/homeownership-sharpens-wealth-inequality-between-generations-and-among-younger-people-too-168734" target="_blank" rel="noopener">The Conversation</a>
+      · <a href="https://app.dimensions.ai/details/publication/pub.1121843119?and_facet_source=author&amp;and_facet_source=orcid&amp;and_facet_source=researcher&amp;and_facet_source=journal&amp;and_facet_source=repository&amp;and_facet_source=book&amp;and_facet_source=book_series" target="_blank" rel="noopener">Dimensions</a>
+    </div>
+  </li>
+
+</ul>
 
 
-    <li>
-      <span class="pub-main"
-            title="Uses a triple-difference design around Australia’s 2001 heroin shortage to show large long-run crime reductions from supply shocks.">
-        Dual-edged benefits of drug policing: a quarter century’s lesson from a heroin drought
-      </span><br/>
-      <span class="pub-meta">
-        Journal of Law and Economics (forthcoming). Post-print; media thread on X.
-      </span>
+
+
+  <!-- <h3>Other writing</h3>
+    <ul class="publist">
+      <li>
+        <a class="pub-title" href="Доказательная государственная политика: опыт Австралии" target="_blank" rel="noopener">https://data.rcsi.science/publications/news/147/</a>
+        <div class="pub-links"><a href="https://data.rcsi.science/publications/news/147/" target="_blank" rel="noopener">External link</a></div>
+      </li>
+      <li>
+        <a class="pub-title" href="https://gsom.spbu.ru/students/blog/blog2017_02_13/" target="_blank" rel="noopener">https://gsom.spbu.ru/students/blog/blog2017_02_13/</a>
+        <div class="pub-links"><a href="https://gsom.spbu.ru/students/blog/blog2017_02_13/" target="_blank" rel="noopener">External link</a></div>
+      </li>
+    </ul> -->
+
+
+<h3>Other writing</h3>
+<ul class="publist">
+  <li>
+      <a class="pub-title" href="https://data.rcsi.science/publications/news/147/" target="_blank" rel="noopener">Доказательная государственная политика: опыт Австралии</a>
     </li>
-
-<li>
-  <a class="pub-title" href="https://doi.org/10.1111/ecin.13277" target="_blank" rel="noopener">
-    A closer look at Doleac and Mukherjee (2022) and the effects of naloxone access laws on opioid ER admissions
-    <span class="abs">
-      Replicates and stress-tests the “naloxone moral hazard” claim; documents issues with data, timing, and inference and finds no evidence that naloxone access laws increase opioid ER admissions.
-    </span>
-  </a>
-
-  <div class="pub-meta">Economic Inquiry (2025).</div>
-
-  <div class="pub-links">
-    <a href="https://www.researchgate.net/publication/377492875_A_closer_look_at_Doleac_and_Mukherjee_2022_and_the_effects_of_naloxone_access_laws_on_opioid_ER_admissions" target="_blank" rel="noopener">Post-print</a>
-    · <a href="https://www.dropbox.com/scl/fi/l2iki1wj88toqojstaxgr/Revision-letters.pdf?dl=0&rlkey=u4crvdh7zr6r1xj9952tu2jz9" target="_blank" rel="noopener">Revision letters</a>
-    · <a href="https://filtermag.org/naloxone-moral-hazard-replication-study/" target="_blank" rel="noopener">Media: Filter</a>
-  </div>
-</li>
-
-
     <li>
-      <span class="pub-main"
-            title="Cluster RCT of the ENCORE nursing assessment model, showing patient-safety benefits and redistribution of MET calls and ICU use.">
-        Transforming nursing assessment in acute hospitals: A cluster randomised controlled trial of an evidence-based nursing core assessment (the ENCORE trial)
-      </span><br/>
-      <span class="pub-meta">
-        International Journal of Nursing Studies (2024). Post-print; coverage in ANMJ, Medical Xpress, Mirage.News; Dimensions.
-      </span>
-    </li>
-
-    <li>
-      <span class="pub-main"
-            title="Estimates the impact of a supervised injecting room on nearby housing values, highlighting indirect urban costs of harm reduction.">
-        Harm reduction or amplification? The adverse impact of a supervised injection room on housing prices
-      </span><br/>
-      <span class="pub-meta">
-        Regional Science and Urban Economics (2023). Post-print; media coverage including Twitter thread, 7NEWS, The Age, news.com.au, Hit Network, Cairns Post, Brisbane Times; Dimensions.
-      </span>
-    </li>
-
-    <li>
-      <span class="pub-main"
-            title="Shows that standard wage-equation approaches can badly mis-measure gay wage discrimination using Russian data as a stress test.">
-        Wage equation misrepresents gay wage discrimination: overlooked evidence from Russia
-      </span><br/>
-      <span class="pub-meta">
-        International Journal of Manpower (2022). Post-print; Dimensions.
-      </span>
-    </li>
-
-    <li>
-      <span class="pub-main"
-            title="Uses judge leniency as an instrument to show fines for drug use do not reduce recidivism, despite naive estimates suggesting the opposite.">
-        Fines for illicit drug use do not prevent future crime: evidence from randomly assigned judges
-      </span><br/>
-      <span class="pub-meta">
-        Journal of Economic Behavior and Organization (2022). Post-print; Drug and Alcohol Research Connections; Dimensions.
-      </span>
-    </li>
-
-    <li>
-      <span class="pub-main"
-            title="Documents a demand shock favouring law and business graduates in transition economies and builds a three-input SBTC model to explain wage patterns.">
-        Technical change and wage premiums amongst skilled labor: evidence from the economic transition
-      </span><br/>
-      <span class="pub-meta">
-        Economics of Transition and Institutional Change (2022). Post-print; EUROPP blog; slides.
-      </span>
-    </li>
-
-    <li>
-      <span class="pub-main"
-            title="Analyses National Drug Strategy surveys to show growing support for cannabis legalisation and less punitive responses to drug possession.">
-        Changes in and correlates of Australian public attitudes toward illicit drug use
-      </span><br/>
-      <span class="pub-meta">
-        Drug and Alcohol Review (2021). Post-print; covered in The Guardian and Forbes; Dimensions.
-      </span>
-    </li>
-
-    <li>
-      <span class="pub-main"
-            title="Evaluates a 70% tax increase on ready-to-drink beverages and finds effects concentrated among 25–69 year olds, not the targeted under‑25 group.">
-        The Australian ready-to-drink beverages tax missed its target age group
-      </span><br/>
-      <span class="pub-meta">
-        International Journal of Drug Policy (2021). Post-print; media and policy commentary including Twitter thread and Austaxpolicy; Dimensions.
-      </span>
-    </li>
-
-    <li>
-      <span class="pub-main"
-            title="Shows that including imputed rents in income substantially lowers measured intergenerational mobility in Australia, with implications for cross-country comparisons.">
-        The role of imputed rents in intergenerational income mobility in three countries
-      </span><br/>
-      <span class="pub-meta">
-        Journal of Housing Economics (2020). Post-print; coverage in VoxEU, UTS News, Austaxpolicy, The Conversation; Dimensions.
-      </span>
-    </li>
-  </ul>
-
-  <h3>Other writing</h3>
-  <ul class="publist">
-    <li>
-      <span class="pub-main">Western sanctions are only strengthening Putin’s grip on power (2022)</span>
-      <span class="pub-meta">· LSE EUROPP blog.</span>
-    </li>
-    <li>
-      <span class="pub-main">Доказательная государственная политика: опыт Австралии (2021)</span>
-      <span class="pub-meta">· Russian-language piece on evidence-based policy.</span>
-    </li>
-    <li>
-      <span class="pub-main">Australia’s Current Alcohol Tax System Impedes Public Health Policy (2021)</span>
-      <span class="pub-meta">· Austaxpolicy blog.</span>
-    </li>
-    <li>
-      <span class="pub-main">Covid-19 and Australia’s Housing Crisis: How the Intergenerational Impact Can Go Undetected (2021)</span>
-      <span class="pub-meta">· Austaxpolicy blog.</span>
-    </li>
-    <li>
-      <span class="pub-main">Comparing the effects of homeownership on intergenerational income mobility in the US, Germany, and Australia (2019)</span>
-      <span class="pub-meta">· VoxEU column.</span>
-    </li>
-    <li>
-      <span class="pub-main">Умом пощупать то, что глазами не увидеть (2017)</span>
-      <span class="pub-meta">· Popular piece (Russian).</span>
-    </li>
-  </ul>
-
-  <h3>Articles under review</h3>
+      <a class="pub-title" href="https://gsom.spbu.ru/students/blog/blog2017_02_13/" target="_blank" rel="noopener">Умом пощупать то, что глазами не увидеть</a>
+  
+  
+  
+  
+      <!-- <h3>Articles under review</h3>
   <ul class="publist">
     <li><span class="pub-main">Interviewers as Instruments: Estimating the Wage Penalty of Drug Use</span></li>
     <li><span class="pub-main">Cluster trials inference with CARE</span> <span class="pub-meta">· recorded talk available.</span></li>
     <li><span class="pub-main">The middle class is not disappearing — it is mismeasured</span> <span class="pub-meta">· slides and recorded talk available.</span></li>
     <li><span class="pub-main">Further findings on the intergenerational transmission of alcohol consumption</span> <span class="pub-meta">· slides available.</span></li>
-  </ul>
+  </ul> -->
 
-  <h3>Articles in progress</h3>
+  <!-- <h3>Articles in progress</h3>
   <ul class="publist">
     <li><span class="pub-main">Clean slate, same fate: judge–design evidence on the limits of conviction avoidance</span></li>
     <li><span class="pub-main">Opportunity as replacement therapy</span></li>
     <li><span class="pub-main">Liquor licence density and alcohol-related crimes in NSW</span></li>
     <li><span class="pub-main">Unexpected health improvements following imprisonment: evidence from an Australian national survey</span></li>
-  </ul>
+  </ul> -->
 
-  <h3>Shelved work for the future</h3>
+  <!-- <h3>Shelved work for the future</h3>
   <ul class="publist">
     <li><span class="pub-main">Preliminary Evaluation of the NSW Government’s Bump It Up Program</span></li>
     <li><span class="pub-main">An auction-theoretical model of grade inflation</span></li>
@@ -461,47 +552,204 @@
     <li><span class="pub-main">Income gender disparity and decline in drinking</span></li>
     <li><span class="pub-main">Quantifying Russian gays with census</span></li>
     <li><span class="pub-main">Democracy does improve human capital</span></li>
+  </ul> -->
+
+  <!-- <p class="meta">
+    More details, links, and media coverage are also collected on my legacy publications page:
+    <a href="https://alexeev.pw/publications/" target="_blank" rel="noopener">alexeev.pw/publications</a>.
+  </p> -->
+</section>
+
+
+<section id="mentorship">
+  <h2>Mentorship</h2>
+
+  <p>
+    I am seeking PhD candidates who are passionate about (or keen to learn) economics, biostatistics, and health economics.
+  </p>
+
+  <h3>Why work with me?</h3>
+  <ul>
+    <li>
+      <b>Extensive network and collaboration:</b>
+      I’ve worked with NSW government agencies (Corrective Services NSW, NSW Health) and the private sector (Deloitte, Access),
+      building a network that connects academia with real-world applications.
+    </li>
+    <li>
+      <b>Expertise in research methodologies:</b>
+      I work across quasi-experimental methods and clinical trials, and can support a wide range of designs and applied settings.
+    </li>
+    <li>
+      <b>Research idea bank:</b>
+      For prospective students, I maintain a (very messy) Research Ideas Bank to inspire project proposals.
+      <a href="https://docs.google.com/" target="_blank" rel="noopener">View Research Ideas Bank</a>
+    </li>
+  </ul>
+
+  <h3>Current students</h3>
+  <ul class="publist">
+    <li>
+      <span class="pub-main">
+        <a href="https://southernrenal.com.au" target="_blank" rel="noopener">Alexandra Gallagher</a>
+      </span>
+      <div class="pub-meta">Ph.D. Candidate in Nephrology, USYD</div>
+      <div class="pub-links">
+        <span class="meta">
+          Overview: Alex is a Net Zero Hub medical lead with the Ministry of Health and a lead at the National Hypertension Taskforce.
+          Our work focuses on cutting-edge trial designs, including Bayesian adaptive trials.
+        </span>
+      </div>
+    </li>
+
+    <li>
+      <span class="pub-main">Jessica Cornish</span>
+      <div class="pub-meta">DPsych (Clinical &amp; Forensic Psychology) Candidate, Swinburne University of Technology</div>
+      <div class="pub-links">
+        <span class="meta">
+          Overview: Jessica studies police responses to family violence, using systematic reviews and advanced causal methods to evaluate
+          interventions like arrest and safety notices.
+        </span>
+      </div>
+    </li>
+  </ul>
+
+  <h3>Past students</h3>
+  <ul class="publist">
+    <li>
+      <span class="pub-main">
+        <a href="https://www.linkedin.com/" target="_blank" rel="noopener">Oscar Ninou</a>
+      </span>
+      <div class="pub-meta">M.Phil. in Engineering</div>
+      <div class="pub-links">
+        <span class="meta">
+          Overview: Oscar worked on the
+          <a href="https://www.researchgate.net" target="_blank" rel="noopener">HOPE Pilot Study</a>.
+          Now admitted into the graduate program at UC Berkeley Haas School of Business.
+        </span>
+      </div>
+    </li>
   </ul>
 
   <p class="meta">
-    More details, links, and media coverage are also collected on my legacy publications page:
-    <a href="https://alexeev.pw/publications/" target="_blank" rel="noopener">alexeev.pw/publications</a>.
+    If you’re interested in joining as a PhD student, please reach out:
+    <a href="mailto:sergei.v.alexeev@gmail.com">sergei.v.alexeev@gmail.com</a>.
   </p>
 </section>
 
 
-    <section id="mentorship">
-      <h2>Mentorship</h2>
-      <p>
-        I’m seeking PhD candidates who are passionate about (or keen to learn) economics, biostatistics, and health economics.
-      </p>
-      <ul>
-        <li><b>Extensive network & collaboration:</b> work with NSW government agencies and private sector partners.</li>
-        <li><b>Methodological breadth:</b> quasi-experimental designs and clinical trials.</li>
-        <li><b>Research idea bank:</b> I maintain a research ideas bank for prospective students.</li>
-      </ul>
-      <p class="meta">
-        Details: <a href="https://alexeev.pw/mentorship/" target="_blank" rel="noopener">Mentorship page</a>
-      </p>
-    </section>
 
-    <section id="consulting">
-      <h2>Consulting</h2>
-      <p>
-        Have a question you need answered or a messy dataset you’d like to make sense of?
-        Email me with a few lines on your problem, timelines, and constraints — I’ll reply with a simple scope and options.
-      </p>
-      <ul>
-        <li><b>Expert witness:</b> Fair Work Commission (AM2024/20); IRC of NSW (2025/187709).</li>
-        <li><b>Advisory:</b> Rennie Advisory; Deloitte.</li>
-        <li><b>Cross-agency work:</b> NSW Justice Health, Corrective Services NSW, and BOCSAR.</li>
-      </ul>
-      <p class="meta">
-        Details: <a href="https://alexeev.pw/consulting/" target="_blank" rel="noopener">Consulting page</a>
-      </p>
-    </section>
+<section id="consulting">
+  <h2>Consulting</h2>
 
-    <section id="teaching">
+  <p>
+    I help organisations make better decisions with rigorous evidence. My work sits at the intersection of health economics,
+    epidemiology, and program evaluation — from clinical trials to justice and public policy.
+  </p>
+
+  <p>
+    My work has informed clinical practice and policy debates and has been covered by national media. I also serve on the
+    editorial board of the <i>International Journal of Drug Policy</i> and sit on the NSW PHSREC, which helps me keep one foot
+    in practice and one in governance.
+  </p>
+
+  <h3>What I do</h3>
+  <ul>
+    <li>Expert witness &amp; independent expert reports</li>
+    <li>Program and policy evaluation (randomised, quasi-experimental, cost-benefit)</li>
+    <li>Methods advisory for trials and complex real-world data</li>
+    <li>Active PLIDA onboarding, maintain current HILDA access, and well-versed in public-use datasets</li>
+    <li>Data strategy, linkage, governance &amp; ethics (including PHSREC context)</li>
+    <li>Workshops and capability building for research teams</li>
+  </ul>
+
+  <h3>How I work</h3>
+  <p>
+    Clear questions, transparent methods, practical outputs. I scope quickly, document assumptions, and deliver
+    decision-ready briefs with reproducible code where relevant. Happy to collaborate with in-house analysts or external firms.
+  </p>
+
+  <h3>Selected engagements</h3>
+  <ul>
+    <li>
+      <b>Expert witness</b>
+      <ul>
+        <li>Fair Work Commission, AM2024/20 — Health Professionals and Support Services Award 2020 (instructed by Piper Alderman)</li>
+        <li>Industrial Relations Commission of NSW, 2025/187709 — Visiting Medical Officers Sessional and Fee-For-Service Determinations (instructed by HWLE Lawyers)</li>
+      </ul>
+    </li>
+    <li>
+      <b>Advisory input</b>
+      <ul>
+        <li>Rennie Advisory — applied microeconometrics and evaluation</li>
+        <li>Deloitte — health and justice projects</li>
+      </ul>
+    </li>
+    <li>
+      <b>Cross-agency work</b>
+      <ul>
+        <li>NSW Justice Health, Corrective Services NSW, and BOCSAR — justice–health data and evaluation</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>Working together</h3>
+  <p>
+    Have a question you need answered or a messy dataset you’d like to make sense of?
+    Email me at <a href="mailto:sergei.v.alexeev@gmail.com">sergei.v.alexeev@gmail.com</a> with a few lines on your problem,
+    timelines, and any constraints. I’ll reply with a simple scope and options.
+  </p>
+</section>
+
+
+        
+
+<section id="grants">
+  <h2>Grants</h2>
+
+  <ul class="publist">
+    <li>
+      <a class="pub-title" href="https://alexeev.pw/evidence/" target="_blank" rel="noopener">
+        EVIDENCE: Evaluating Interventions for Drug Epidemics—Net Community Effectiveness
+        <span class="abs">
+          This project will study how harm reduction programs—such as safe injection centres and needle exchanges—in Sydney and Melbourne affect health, safety, and wellbeing for everyone. We aim to find out what works best, for whom, and how to make drug policies fairer and more effective across Australia. All results will be openly shared to help communities, service providers, and policymakers make better decisions. Special focus will be given to young people and First Nations Australians
+        </span>
+      </a>
+
+      <div class="pub-links">
+        <a href="https://alexeev.pw/evidence/" target="_blank" rel="noopener">NHMRC Ideas grant #2025127 (2024–2028)</a>
+        · <a href="https://www.dropbox.com/scl/fi/lw2mh6g4ogq72qrf0xng3/EVIDENCE-Proposal.pdf?dl=0&rlkey=dmqx2jddcfjqqg93t5i57p7f9" target="_blank" rel="noopener">Proposal (PDF)</a>
+      </div>
+    </li>
+
+    <li>
+      <a class="pub-title" href="https://alexeev.pw/hope/" target="_blank" rel="noopener">
+        HOPE: Health Outcomes and Post-incarceration Evaluation
+        <span class="abs">
+          The HOPE project will find out how going to prison affects people’s health in Australia. We compare people sent to prison with those given community orders, using a research method that shows the true impact of prison. By working with Aboriginal leaders and people with lived experience, we aim to give clear answers to help improve health and justice policies. This evidence is urgently needed to address health gaps and support better outcomes for individuals, families, communities and the nation
+        </span>
+      </a>
+
+      <div class="pub-links">
+        <a href="https://alexeev.pw/hope/" target="_blank" rel="noopener">ARC Discovery grant #DP240100394 (2024–2027)</a>
+        · <a href="https://www.dropbox.com/scl/fi/84bkc6tdvlucy6b4sjikj/HOPE-Proposal.pdf?dl=0&rlkey=x7ygj2mc9p1p7qbox9w3yaloh" target="_blank" rel="noopener">Proposal (PDF)</a>
+        · <a href="https://www.dropbox.com/scl/fi/lq8wmdip2quq2yif6v3ap/HOPE-Rejoinder-with-Grant-Reviews.pdf?dl=0&rlkey=5hvl1msi6gize5x4d4h1liolz" target="_blank" rel="noopener">Rejoinder + reviews (PDF)</a>
+      </div>
+    </li>
+
+    <li>
+      <a class="pub-title" href="https://www.dropbox.com/scl/fi/flbwpv7wzsewi00zje0d4/DE260100996.pdf?dl=0&rlkey=0gsgln3akrkhg5r8yh8l5jx5o" target="_blank" rel="noopener">
+        CARE for stepped-wedge trials: negative weights and robust inference
+      </a>
+
+      <div class="pub-links">
+        <a href="https://www.dropbox.com/scl/fi/flbwpv7wzsewi00zje0d4/DE260100996.pdf?dl=0&rlkey=0gsgln3akrkhg5r8yh8l5jx5o" target="_blank" rel="noopener">ARC DECRA #DE260100996 (2026–2028)</a>
+        · <a href="https://www.dropbox.com/scl/fi/flbwpv7wzsewi00zje0d4/DE260100996.pdf?dl=0&rlkey=0gsgln3akrkhg5r8yh8l5jx5o" target="_blank" rel="noopener">Proposal (PDF)</a>
+      </div>
+    </li>
+  </ul>
+</section>
+
+
       <h2>Teaching</h2>
       <ul>
         <li><b>Intermediate Microeconomics</b> <span class="meta">(2017–2019)</span></li>
