@@ -119,42 +119,71 @@
   text-decoration: underline;
 }
 
-    .publist li{
-  margin: 10px 0 14px;
+
+/* Publications list: consistent bullet + clean hover card */
+.publist{
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
 }
-.pub-main{
-  font-weight: 600;
+
+.publist li{
+  position: relative;
+  padding-left: 18px;
+  margin: 14px 0;
 }
-.pub-meta{
-  font-size: 14px;
+
+.publist li::before{
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 0.2em;
   color: var(--muted);
 }
 
-
-/* Publications: hoverable abstract card */
+/* Title looks like normal text, but behaves like a link */
 .pub-title{
   position: relative;
   display: inline-block;
-  font-weight: 600;
+  font-weight: 650;
+  color: var(--fg);
   text-decoration: none;
 }
 
+.pub-title:hover,
+.pub-title:focus{
+  color: var(--link);
+  text-decoration: underline;
+}
+
+.pub-title:focus{
+  outline: 2px solid var(--link);
+  outline-offset: 3px;
+}
+
+/* Hover abstract card */
 .pub-title .abs{
   position: absolute;
   left: 0;
-  top: 1.6em;
-  width: min(650px, 85vw);
+  top: 1.8em;
+  width: min(560px, 86vw);
   background: var(--bg);
-  color: var(--fg);
   border: 1px solid var(--rule);
-  padding: 12px 14px;
   border-radius: 10px;
-  box-shadow: 0 14px 40px rgba(0,0,0,.25);
+  padding: 10px 12px;
+
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 400;
+  color: var(--muted);
+
+  box-shadow: 0 10px 28px rgba(0,0,0,.22);
+
   opacity: 0;
   visibility: hidden;
   transform: translateY(6px);
-  transition: opacity .15s ease, transform .15s ease, visibility .15s;
-  z-index: 50;
+  transition: opacity .14s ease, transform .14s ease, visibility .14s;
+  z-index: 60;
 }
 
 .pub-title:hover .abs,
@@ -162,11 +191,6 @@
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
-}
-
-.pub-title:focus{
-  outline: 2px solid var(--link);
-  outline-offset: 3px;
 }
 
 .pub-meta{
@@ -179,13 +203,17 @@
   margin-top: 4px;
   font-size: 14px;
 }
+
 .pub-links a{
+  color: var(--link);
   text-decoration: none;
 }
+
 .pub-links a:hover{
   text-decoration: underline;
 }
 
+    
     
   </style>
 </head>
@@ -259,15 +287,17 @@
   </p>
 
   <ul class="publist">
-    <li>
-      <span class="pub-main"
-            title="Quantifies how heavy drinking and physical violence against women reinforce each other, with implications for targeted prevention.">
-        Risky alcohol use and violence against women: cause or consequence?
-      </span><br/>
-      <span class="pub-meta">
-        International Journal of Drug Policy (2025). Post-print; Dimensions.
-      </span>
-    </li>
+<li>
+  <a class="pub-title" href="PUT_DOI_OR_JOURNAL_LINK" target="_blank" rel="noopener">
+    Risky alcohol use and violence against women: cause or consequence?
+    <span class="abs">PUT_YOUR_WORDPRESS_ABSTRACT_TEXT_HERE</span>
+  </a>
+  <div class="pub-meta">International Journal of Drug Policy (2025).</div>
+  <div class="pub-links">
+    <a href="PUT_POSTPRINT_LINK">Post-print</a> · <a href="PUT_DIMENSIONS_LINK">Dimensions</a>
+  </div>
+</li>
+
 
     <li>
       <span class="pub-main"
