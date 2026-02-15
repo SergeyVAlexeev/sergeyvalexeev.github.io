@@ -111,7 +111,7 @@
 .handles{
   color: var(--muted);
   font-size: 14px;
-  margin-top: 10px;
+  margin-top: 0px;
 }
 
 .handles a{
@@ -227,11 +227,13 @@
 /* Nudge photo down slightly */
 .about-pic{width:150px; height:auto; border-radius:6px; flex-shrink:0; margin-top:10px;}
 
-/* Vertical divider and padding */
-.about-text{min-width:0; border-left:1px solid var(--rule); padding-left:20px;}
+/* About text: no vertical divider */
+.about-text{min-width:0; padding:0;}
 
-/* Handles now span full width under About */
-.about-handles{margin-top:14px; padding-top:12px; border-top:1px solid var(--rule);}
+/* About handles: no horizontal rule */
+.about-handles{margin-top:14px; padding-top:0; border-top:none;}
+
+
 
 @media (max-width:640px){
   .about-row{flex-direction:column;}
@@ -265,17 +267,15 @@
     <hr />
 
 
-
 <section id="about">
   <h2>About</h2>
 
   <div class="about-row">
-    <img class="about-pic" src="Alexeev Headshot.jpg" alt="Sergey Alexeev">
-
     <div class="about-text">
       <p>
         I am an economist–statistician specialising in trial-based and quasi-experimental evaluation, predictive modelling, and cost–benefit analysis. I work with linked administrative and clinical datasets to answer policy questions across
-        health, labour, housing, and criminal justice, and I build reproducible pipelines in R/Stata/Python/SQL for secure data environments.
+        health, labour, housing, and criminal justice, and I build reproducible pipelines in R/Stata/Python/SQL for secure data environments—an approach reinforced through my work as a contributor to the
+        <a href="https://onlinelibrary.wiley.com/toc/14657295/2026/64/1" target="_blank" rel="noopener">Institute for Replication (I4R)</a>.
       </p>
 
       <p>
@@ -286,7 +286,18 @@
         <a href="https://www.cancer.nsw.gov.au/research-and-data/nsw-population-health-services-research-ethics-com/committee-members" target="_blank" rel="noopener">NSW Population &amp; Health Services Research Ethics Committee (PHSREC)</a>.
       </p>
     </div>
+
+    <img class="about-pic" src="Alexeev Headshot.jpg" alt="Sergey Alexeev">
   </div>
+</section>
+
+
+
+
+
+
+
+  
 
   <!-- Full-width handles (spans under image + text) -->
   <p class="handles about-handles">
@@ -645,6 +656,10 @@
 
 
 
+
+
+
+<!-- 
 <section id="consulting">
   <h2>Consulting</h2>
 
@@ -705,10 +720,43 @@
     Email me at <a href="mailto:sergei.v.alexeev@gmail.com">sergei.v.alexeev@gmail.com</a> with a few lines on your problem,
     timelines, and any constraints. I’ll reply with a simple scope and options.
   </p>
+</section> -->
+
+
+       
+
+<section id="consulting">
+  <h2>Consulting</h2>
+
+  <p>
+    I help organisations answer high-stakes, decision-facing questions with evidence that is transparent, defensible, and usable.
+    My consulting work combines economics, biostatistics, and health economics to evaluate policies, programs, and technologies —
+    from causal impact evaluation (trial-based and quasi-experimental) to economic evaluation (cost-effectiveness, cost–benefit,
+    budget impact) and clear decision briefs for non-technical audiences.
+  </p>
+
+  <p>
+    My background spans corporate finance and project delivery (Russia/France), economics (Canada), and a PhD in economics, and I now
+    apply that toolkit in Australian public health and policy. Practically, that means I scope quickly, agree on the decision,
+    comparators and assumptions up front, build a workable data strategy, and deliver decision-ready outputs (including reproducible
+    code where appropriate). I’m comfortable working in secure data environments (including PLIDA) and maintain current HILDA access,
+    so projects can move from question → analysis → defensible write-up without hand-waving.
+  </p>
+
+  <p>
+    I also produce expert witness / independent expert reports for courts and tribunals, which keeps me grounded in what “stands up to
+    scrutiny”: clear logic, transparent methods, careful interpretation, and sensitivity analysis that makes uncertainty explicit.
+    Selected engagements include expert witness work for the Fair Work Commission (AM2024/20; instructed by Piper Alderman) and the
+    Industrial Relations Commission of NSW (2025/187709), advisory input for Deloitte and Rennie Advisory, and cross-agency evaluation
+    work with NSW Justice Health, Corrective Services NSW, and BOCSAR.
+  </p>
+
+  <p>
+    If you’d like to discuss a project, email me at with a few lines on the decision you need to make, your timeline, and what data you have (or can access). I’ll reply with a simple
+    scope and options.
+  </p>
 </section>
 
-
-        
 
 <section id="grants">
   <h2>Grants</h2>
@@ -723,8 +771,7 @@
       </a>
 
       <div class="pub-links">
-        <a href="https://alexeev.pw/evidence/" target="_blank" rel="noopener">NHMRC Ideas grant #2025127 (2024–2028)</a>
-        · <a href="https://www.dropbox.com/scl/fi/lw2mh6g4ogq72qrf0xng3/EVIDENCE-Proposal.pdf?dl=0&rlkey=dmqx2jddcfjqqg93t5i57p7f9" target="_blank" rel="noopener">Proposal (PDF)</a>
+        <a href="https://www.dropbox.com/scl/fi/antyfk59wc2j7uoxjxe3p/Alexeev-IG-28.07.25.pdf?rlkey=5fua4d7oi5ql4llpa7xde2b0v&dl=0" target="_blank" rel="noopener">Proposal under NHMRC Investigator grant</a>
       </div>
     </li>
 
@@ -737,9 +784,7 @@
       </a>
 
       <div class="pub-links">
-        <a href="https://alexeev.pw/hope/" target="_blank" rel="noopener">ARC Discovery grant #DP240100394 (2024–2027)</a>
-        · <a href="https://www.dropbox.com/scl/fi/84bkc6tdvlucy6b4sjikj/HOPE-Proposal.pdf?dl=0&rlkey=x7ygj2mc9p1p7qbox9w3yaloh" target="_blank" rel="noopener">Proposal (PDF)</a>
-        · <a href="https://www.dropbox.com/scl/fi/lq8wmdip2quq2yif6v3ap/HOPE-Rejoinder-with-Grant-Reviews.pdf?dl=0&rlkey=5hvl1msi6gize5x4d4h1liolz" target="_blank" rel="noopener">Rejoinder + reviews (PDF)</a>
+        <a href="https://www.dropbox.com/scl/fi/ji75pcc1pwlrwhi2tr8lz/HOPE-23-July-25-Final.pdf?rlkey=fwtiffucu5uek43qxl8gbas6r&dl=0" target="_blank" rel="noopener">Proposal under EMC MRFF</a>
       </div>
     </li>
 
@@ -749,8 +794,7 @@
       </a>
 
       <div class="pub-links">
-        <a href="https://www.dropbox.com/scl/fi/flbwpv7wzsewi00zje0d4/DE260100996.pdf?dl=0&rlkey=0gsgln3akrkhg5r8yh8l5jx5o" target="_blank" rel="noopener">ARC DECRA #DE260100996 (2026–2028)</a>
-        · <a href="https://www.dropbox.com/scl/fi/flbwpv7wzsewi00zje0d4/DE260100996.pdf?dl=0&rlkey=0gsgln3akrkhg5r8yh8l5jx5o" target="_blank" rel="noopener">Proposal (PDF)</a>
+        <a href="https://www.dropbox.com/scl/fi/l1mbrr2b9huljxhtq71nv/DPEI270105538.pdf?rlkey=rib4alkuj6rzu3cpspcuimzju&dl=0" target="_blank" rel="noopener">Proposal under ARC Discovery </a>
       </div>
     </li>
   </ul>
