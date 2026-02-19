@@ -1,3 +1,6 @@
+
+
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -16,9 +19,26 @@
     }
     html,body{margin:0; padding:0; background:var(--bg); color:var(--fg);}
     body{font:16px/1.6 ui-serif, Georgia, "Times New Roman", Times, serif;}
-    a{color:var(--link);}
+    a{color:var(--link);}  
+    
+    /* Two-column layout: left nav rail + main content */
+.layout{
+  max-width: calc(var(--max) + 140px); /* 140 ~= nav width + gap; tweak if you want */
+  margin: 0 auto;
+  padding: 56px 20px;
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
 
-    .wrap{max-width:var(--max); margin:0 auto; padding:56px 20px;}
+/* Main column */
+.wrap{
+  max-width: var(--max);
+  margin: 0;
+  padding: 0;
+}
+
     header{display:flex; flex-wrap:wrap; gap:18px; align-items:baseline;}
     h1{margin:0; font-size:42px; letter-spacing:-0.02em;}
     .sub{color:var(--muted); font-size:18px;}
@@ -37,11 +57,11 @@
 
     /* Reduce space under small section headings (mentorship) */
     section#mentorship h4 { margin: 0 0 6px; }
+    
 
 .sidenav{
-  position: fixed;
-  top: 140px;
-  left: 14px;
+  position: sticky;
+  top: 56px;              /* where it “sticks” */
   z-index: 50;
   display: flex;
   flex-direction: column;
@@ -49,16 +69,21 @@
 }
 
 .sidenav a{
-  left: 0;
-  width: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
   padding: 6px 10px;
   border: 1px solid var(--rule);
   border-radius: 999px;
   background: transparent;
+
   color: var(--muted);
   text-decoration: none;
   transition: color .15s ease, border-color .15s ease, background .15s ease;
   font-size: 13px;
+  line-height: 1.2;
 }
 
 .sidenav a:hover{
@@ -67,12 +92,12 @@
   background: rgba(127,127,127,0.08);
 }
 
-
-    /* Mobile: hide sidenav (use normal scrolling) */
-    @media (max-width: 900px){
-      .sidenav{ display:none; }
-      .wrap{ padding-top: 32px; }
-    }
+/* Mobile: hide sidenav and revert to single column */
+@media (max-width: 900px){
+  .layout{ display:block; padding:32px 20px; }
+  .sidenav{ display:none; }
+  .wrap{ max-width: var(--max); margin: 0 auto; }
+}
 
     /* Fedor-style “download” buttons + top statement */
 .kicker{
@@ -242,29 +267,32 @@
 }
 
 
+
   </style>
 </head>
-
 <body>
-
-<nav class="sidenav" aria-label="Section navigation">
-  <a href="#about">About <span>↵</span></a>
-  <a href="#mentorship">Mentorship <span>↵</span></a>
-  <a href="#publications">Pubs <span>↵</span></a>
-  <a href="#consulting">Consulting <span>↵</span></a>
-  <a href="#teaching">Teaching <span>↵</span></a>
-  <a href="#contact">Contact <span>↵</span></a>
-</nav>
+<div class="layout">
+  <nav class="sidenav" aria-label="Section navigation">
+    <a href="#about">About <span>↵</span></a>
+    <a href="#mentorship">Mentorship <span>↵</span></a>
+    <a href="#publications">Pubs <span>↵</span></a>
+    <a href="#consulting">Consulting <span>↵</span></a>
+    <a href="#grants">Grants <span>↵</span></a>
+    <a href="#teaching">Teaching <span>↵</span></a>
+  </nav>
 
   <div class="wrap">
     <header>
-  <div>
-    <h1>Sergey Alexeev</h1>
-  </div>
-</header>
-
+      <div>
+        <h1>Sergey Alexeev</h1>
+      </div>
+    </header>
 
     <hr />
+
+
+
+
 
 
 <section id="about">
@@ -289,7 +317,7 @@
 
     <img class="about-pic" src="Alexeev Headshot.jpg" alt="Sergey Alexeev">
   </div>
-</section>
+<!-- </section> -->
 
 
 
@@ -323,7 +351,7 @@
   <h2>Mentorship</h2>
 
   <p>
-    I’m actively looking for HDR/PhD candidates and collaborators. My work spans econometrics, biostatistics, epidemiology, and health economics, and I work closely with applied partners on decision-facing questions. I also do expert witness / independent expert reports for courts and tribunals, which keeps me grounded in what “decision-ready” evidence looks like: clear assumptions, transparent methods, careful interpretation, and outputs that stand up to scrutiny. As a result, I regularly come across concrete, high-impact projects that can be shaped into publishable theses.
+    I’m actively looking for HDR/PhD candidates and collaborators. My work spans econometrics, biostatistics, epidemiology, and health economics, and I work closely with applied partners on decision-facing questions. I also do expert witness / independent expert reports for courts and tribunals, which keeps me grounded in what “decision-ready” evidence looks like. As a result, I regularly come across concrete, high-impact projects that can be shaped into publishable theses.
   </p>
 
   <p>
@@ -519,204 +547,7 @@
 
 
 
-
-
-
-
-  <!-- <h3>Other writing</h3>
-    <ul class="publist">
-      <li>
-        <a class="pub-title" href="Доказательная государственная политика: опыт Австралии" target="_blank" rel="noopener">https://data.rcsi.science/publications/news/147/</a>
-        <div class="pub-links"><a href="https://data.rcsi.science/publications/news/147/" target="_blank" rel="noopener">External link</a></div>
-      </li>
-      <li>
-        <a class="pub-title" href="https://gsom.spbu.ru/students/blog/blog2017_02_13/" target="_blank" rel="noopener">https://gsom.spbu.ru/students/blog/blog2017_02_13/</a>
-        <div class="pub-links"><a href="https://gsom.spbu.ru/students/blog/blog2017_02_13/" target="_blank" rel="noopener">External link</a></div>
-      </li>
-    </ul> -->
-
-
-  
-  
-      <!-- <h3>Articles under review</h3>
-  <ul class="publist">
-    <li><span class="pub-main">Interviewers as Instruments: Estimating the Wage Penalty of Drug Use</span></li>
-    <li><span class="pub-main">Cluster trials inference with CARE</span> <span class="pub-meta">· recorded talk available.</span></li>
-    <li><span class="pub-main">The middle class is not disappearing — it is mismeasured</span> <span class="pub-meta">· slides and recorded talk available.</span></li>
-    <li><span class="pub-main">Further findings on the intergenerational transmission of alcohol consumption</span> <span class="pub-meta">· slides available.</span></li>
-  </ul> -->
-
-  <!-- <h3>Articles in progress</h3>
-  <ul class="publist">
-    <li><span class="pub-main">Clean slate, same fate: judge–design evidence on the limits of conviction avoidance</span></li>
-    <li><span class="pub-main">Opportunity as replacement therapy</span></li>
-    <li><span class="pub-main">Liquor licence density and alcohol-related crimes in NSW</span></li>
-    <li><span class="pub-main">Unexpected health improvements following imprisonment: evidence from an Australian national survey</span></li>
-  </ul> -->
-
-  <!-- <h3>Shelved work for the future</h3>
-  <ul class="publist">
-    <li><span class="pub-main">Preliminary Evaluation of the NSW Government’s Bump It Up Program</span></li>
-    <li><span class="pub-main">An auction-theoretical model of grade inflation</span></li>
-    <li><span class="pub-main">Leveraging the quasi-random assignment of interviewers within the examiner design to identify the effects of stigmatized behavior in non-experimental settings</span></li>
-    <li><span class="pub-main">Cannabis use worsens the gender pay gap</span></li>
-    <li><span class="pub-main">Income gender disparity and decline in drinking</span></li>
-    <li><span class="pub-main">Quantifying Russian gays with census</span></li>
-    <li><span class="pub-main">Democracy does improve human capital</span></li>
-  </ul> -->
-
-  <!-- <p class="meta">
-    More details, links, and media coverage are also collected on my legacy publications page:
-    <a href="https://alexeev.pw/publications/" target="_blank" rel="noopener">alexeev.pw/publications</a>.
-  </p> -->
-</section>
-
-
-<!-- <section id="mentorship">
-  <h2>Mentorship</h2>
-
-  <p>
-    I am seeking PhD candidates who are passionate about (or keen to learn) economics, biostatistics, and health economics.
-  </p>
-
-  <h3>Why work with me?</h3>
-  <ul>
-    <li>
-      <b>Extensive network and collaboration:</b>
-      I’ve worked with NSW government agencies (Corrective Services NSW, NSW Health) and the private sector (Deloitte, Access),
-      building a network that connects academia with real-world applications.
-    </li>
-    <li>
-      <b>Expertise in research methodologies:</b>
-      I work across quasi-experimental methods and clinical trials, and can support a wide range of designs and applied settings.
-    </li>
-    <li>
-      <b>Research idea bank:</b>
-      For prospective students, I maintain a (very messy) Research Ideas Bank to inspire project proposals.
-      <a href="https://docs.google.com/" target="_blank" rel="noopener">View Research Ideas Bank</a>
-    </li>
-  </ul>
-
-  <h3>Current students</h3>
-  <ul class="publist">
-    <li>
-      <span class="pub-main">
-        <a href="https://southernrenal.com.au" target="_blank" rel="noopener">Alexandra Gallagher</a>
-      </span>
-      <div class="pub-meta">Ph.D. Candidate in Nephrology, USYD</div>
-      <div class="pub-links">
-        <span class="meta">
-          Overview: Alex is a Net Zero Hub medical lead with the Ministry of Health and a lead at the National Hypertension Taskforce.
-          Our work focuses on cutting-edge trial designs, including Bayesian adaptive trials.
-        </span>
-      </div>
-    </li>
-
-    <li>
-      <span class="pub-main">Jessica Cornish</span>
-      <div class="pub-meta">DPsych (Clinical &amp; Forensic Psychology) Candidate, Swinburne University of Technology</div>
-      <div class="pub-links">
-        <span class="meta">
-          Overview: Jessica studies police responses to family violence, using systematic reviews and advanced causal methods to evaluate
-          interventions like arrest and safety notices.
-        </span>
-      </div>
-    </li>
-  </ul>
-
-  <h3>Past students</h3>
-  <ul class="publist">
-    <li>
-      <span class="pub-main">
-        <a href="https://www.linkedin.com/in/oscarninou/" target="_blank" rel="noopener">Oscar Ninou</a>
-      </span>
-      <div class="pub-meta">M.Phil. in Engineering</div>
-      <div class="pub-links">
-        <span class="meta">
-          Overview: Oscar worked on the
-          <a href="https://www.researchgate.net" target="_blank" rel="noopener">HOPE Pilot Study</a>.
-          Now admitted into the graduate program at UC Berkeley Haas School of Business.
-        </span>
-      </div>
-    </li>
-  </ul>
-
-  <p class="meta">
-    If you’re interested in joining as a PhD student, please reach out:
-    <a href="mailto:sergei.v.alexeev@gmail.com">sergei.v.alexeev@gmail.com</a>.
-  </p>
-</section> -->
-
-
-
-
-
-
-<!-- 
-<section id="consulting">
-  <h2>Consulting</h2>
-
-  <p>
-    I help organisations make better decisions with rigorous evidence. My work sits at the intersection of health economics,
-    epidemiology, and program evaluation — from clinical trials to justice and public policy.
-  </p>
-
-  <p>
-    My work has informed clinical practice and policy debates and has been covered by national media. I also serve on the
-    editorial board of the <i>International Journal of Drug Policy</i> and sit on the NSW PHSREC, which helps me keep one foot
-    in practice and one in governance.
-  </p>
-
-  <h3>What I do</h3>
-  <ul>
-    <li>Expert witness &amp; independent expert reports</li>
-    <li>Program and policy evaluation (randomised, quasi-experimental, cost-benefit)</li>
-    <li>Methods advisory for trials and complex real-world data</li>
-    <li>Active PLIDA onboarding, maintain current HILDA access, and well-versed in public-use datasets</li>
-    <li>Data strategy, linkage, governance &amp; ethics (including PHSREC context)</li>
-    <li>Workshops and capability building for research teams</li>
-  </ul>
-
-  <h3>How I work</h3>
-  <p>
-    Clear questions, transparent methods, practical outputs. I scope quickly, document assumptions, and deliver
-    decision-ready briefs with reproducible code where relevant. Happy to collaborate with in-house analysts or external firms.
-  </p>
-
-  <h3>Selected engagements</h3>
-  <ul>
-    <li>
-      <b>Expert witness</b>
-      <ul>
-        <li>Fair Work Commission, AM2024/20 — Health Professionals and Support Services Award 2020 (instructed by Piper Alderman)</li>
-        <li>Industrial Relations Commission of NSW, 2025/187709 — Visiting Medical Officers Sessional and Fee-For-Service Determinations (instructed by HWLE Lawyers)</li>
-      </ul>
-    </li>
-    <li>
-      <b>Advisory input</b>
-      <ul>
-        <li>Rennie Advisory — applied microeconometrics and evaluation</li>
-        <li>Deloitte — health and justice projects</li>
-      </ul>
-    </li>
-    <li>
-      <b>Cross-agency work</b>
-      <ul>
-        <li>NSW Justice Health, Corrective Services NSW, and BOCSAR — justice–health data and evaluation</li>
-      </ul>
-    </li>
-  </ul>
-
-  <h3>Working together</h3>
-  <p>
-    Have a question you need answered or a messy dataset you’d like to make sense of?
-    Email me at <a href="mailto:sergei.v.alexeev@gmail.com">sergei.v.alexeev@gmail.com</a> with a few lines on your problem,
-    timelines, and any constraints. I’ll reply with a simple scope and options.
-  </p>
-</section> -->
-
-
-       
+     
 
 <section id="consulting">
   <h2>Consulting</h2>
@@ -794,50 +625,46 @@
 </section>
 
 
-      <h2>Teaching</h2>
-      <ul>
-        <li><b>Intermediate Microeconomics</b> <span class="meta">(2017–2019)</span></li>
-        <li><b>Predictive Analytics</b> <span class="meta">(2015–2017)</span></li>
-        <li><b>Data Mining and Data Analysis</b> <span class="meta">(2015–2017)</span></li>
-        <li><b>Time Series Econometrics</b> <span class="meta">(2015–2017)</span></li>
-        <li><b>Macroeconomics / Global Governance / Macropolicies / Financial Intermediation</b> <span class="meta">(2014–2015)</span></li>
-        <li><b>Intro Micro / Intro Macro</b> <span class="meta">(2012–2013)</span></li>
-      </ul>
-      <p class="meta">
-        Details: <a href="https://alexeev.pw/tutoring/" target="_blank" rel="noopener">Teaching page</a>
-      </p>
-    </section>
+<section id="teaching">
+  <h2>Teaching</h2>
+  <ul>
+    <li><b>Intermediate Microeconomics</b> <span class="meta">(2017–2019)</span></li>
+    <li><b>Predictive Analytics</b> <span class="meta">(2015–2017)</span></li>
+    <li><b>Data Mining and Data Analysis</b> <span class="meta">(2015–2017)</span></li>
+    <li><b>Time Series Econometrics</b> <span class="meta">(2015–2017)</span></li>
+    <li><b>Macroeconomics / Global Governance / Macropolicies / Financial Intermediation</b> <span class="meta">(2014–2015)</span></li>
+    <li><b>Intro Micro / Intro Macro</b> <span class="meta">(2012–2013)</span></li>
+  </ul>
+  <p class="meta">
+    Details: <a href="https://alexeev.pw/tutoring/" target="_blank" rel="noopener">Teaching page</a>
+  </p>
+</section>
 
-    <!-- <section id="contact">
-      <h2>Contact</h2>
-      <p>
-        Email: <a href="mailto:sergei.v.alexeev@gmail.com">sergei.v.alexeev@gmail.com</a><br/>
-        Sydney, Australia
-      </p>
-    </section> -->
 
-    <footer>
-      <hr />
-      <div class="meta">Last updated: <span id="lu"></span></div>
-    </footer>
-  </div>
 
-  <script>
-    const d = new Date(document.lastModified);
-    document.getElementById('lu').textContent = d.toISOString().slice(0,10);
-  </script>
-  <script>
-    // Prevent navigation when clicking publication titles — keep hover/focus abstracts.
-    document.addEventListener('click', function (e) {
-      const el = e.target.closest && e.target.closest('.pub-title');
-      if (!el) return;
-      // Allow modifier + click (open in new tab/window)
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      // If the click was inside the pub-links area, allow it
-      if (e.target.closest && e.target.closest('.pub-links')) return;
-      e.preventDefault();
-      if (el.focus) el.focus();
-    }, true);
-  </script>
+<footer>
+  <hr />
+  <div class="meta">Last updated: <span id="lu"></span></div>
+</footer>
+
+</div><!-- /.wrap -->
+</div><!-- /.layout -->
+
+<script>
+  const d = new Date(document.lastModified);
+  document.getElementById('lu').textContent = d.toISOString().slice(0,10);
+</script>
+
+<script>
+  document.addEventListener('click', function (e) {
+    const el = e.target.closest && e.target.closest('.pub-title');
+    if (!el) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (e.target.closest && e.target.closest('.pub-links')) return;
+    e.preventDefault();
+    if (el.focus) el.focus();
+  }, true);
+</script>
+
 </body>
 </html>
