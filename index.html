@@ -48,7 +48,12 @@
     .pill a:hover{text-decoration:underline;}
 
     hr{border:none; border-top:1px solid var(--rule); margin:28px 0;}
-    section{margin:28px 0;}
+
+    /* Section separators (rule above each section heading) */
+    section{margin:0; padding:28px 0;}
+    section#about{padding-top:0;}
+    section + section{border-top:1px solid var(--rule);}
+
     h2{margin:0 0 10px; font-size:18px; text-transform:uppercase; letter-spacing:0.08em;}
     p{margin:10px 0;}
     ul{margin:8px 0 0 18px; padding:0;}
@@ -92,11 +97,119 @@
   background: rgba(127,127,127,0.08);
 }
 
-/* Mobile: hide sidenav and revert to single column */
+/* Mobile top bar + off-canvas navigation */
+.topbar{
+  display:none;
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  background: var(--bg);
+  border-bottom: 1px solid var(--rule);
+}
+
+.topbar-inner{
+  max-width: calc(var(--max) + 140px);
+  margin: 0 auto;
+  padding: 10px 16px;
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.topbar-title{
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-size: 16px;
+  color: var(--fg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navbtn{
+  display:inline-flex;
+  align-items:center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--fg);
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.navbtn:hover{
+  border-color: var(--link);
+  color: var(--link);
+}
+
+.nav-scrim{
+  display:none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 250;
+}
+
+.nav-scrim.open{ display:block; }
+
+.nav-close{
+  display:none;
+}
+
+body.nav-open{
+  overflow: hidden;
+}
+
+/* Mobile: single column + hamburger menu */
 @media (max-width: 900px){
+  .topbar{ display:block; }
   .layout{ display:block; padding:32px 20px; }
-  .sidenav{ display:none; }
   .wrap{ max-width: var(--max); margin: 0 auto; }
+
+  .sidenav{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: min(320px, 82vw);
+    padding: 70px 16px 16px;
+    background: var(--bg);
+    border-right: 1px solid var(--rule);
+    box-shadow: 0 12px 34px rgba(0,0,0,.25);
+    transform: translateX(-110%);
+    transition: transform .18s ease;
+    z-index: 400;
+  }
+
+  .sidenav.open{ transform: translateX(0); }
+
+  .sidenav a{
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .nav-close{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--fg);
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    cursor: pointer;
+  }
+  .nav-close:hover{ border-color: var(--link); color: var(--link); }
 }
 
     /* Fedor-style “download” buttons + top statement */
@@ -271,14 +384,26 @@
   </style>
 </head>
 <body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <button class="navbtn" id="nav-toggle" type="button" aria-expanded="false" aria-controls="sidenav">☰ Menu</button>
+      <div class="topbar-title">Sergey Alexeev</div>
+      <a class="navbtn" href="https://www.dropbox.com/scl/fi/fy4ibvdpfu98hg86s7ptq/SA-CV-online.pdf?rlkey=zv4r3jue6tl0v71xlhdexwl5z&dl=0" target="_blank" rel="noopener">CV ↗</a>
+    </div>
+  </div>
+
+  <div class="nav-scrim" id="nav-scrim" hidden></div>
+
 <div class="layout">
-  <nav class="sidenav" aria-label="Section navigation">
+  <nav class="sidenav" id="sidenav" aria-label="Section navigation">
+    <button class="nav-close" id="nav-close" type="button" aria-label="Close menu">×</button>
     <a href="#about">About <span>↵</span></a>
     <a href="#mentorship">Mentorship <span>↵</span></a>
     <a href="#publications">Pubs <span>↵</span></a>
     <a href="#consulting">Consulting <span>↵</span></a>
     <a href="#grants">Grants <span>↵</span></a>
     <a href="#teaching">Teaching <span>↵</span></a>
+    <a href="https://www.dropbox.com/scl/fi/fy4ibvdpfu98hg86s7ptq/SA-CV-online.pdf?rlkey=zv4r3jue6tl0v71xlhdexwl5z&dl=0" target="_blank" rel="noopener">CV <span>↗</span></a>
   </nav>
 
   <div class="wrap">
@@ -395,19 +520,19 @@
       <div class="pub-links">
         <a href="https://doi.org/10.1016/j.drugpo.2025.104981" target="_blank" rel="noopener">International Journal of Drug Policy (2025)</a>
         · <a href="https://www.researchgate.net/publication/396442820_Corrigendum_to_Risky_alcohol_use_and_violence_against_women_cause_or_consequence_International_Journal_of_Drug_Policy_145_2025_104981" target="_blank" rel="noopener">Post-print</a>
+        · <a href="https://app.dimensions.ai/details/publication/pub.1192827829" target="_blank" rel="noopener">Dimensions</a>
       </div>
     </li>
 
     <li>
-      <a class="pub-title" href="https://www.dropbox.com/scl/fi/ls5sk62g96ce4ro1ttfx6/Heroin-Drought.pdf?rlkey=p40zg7ip7m0jlx9tzum7kptu8&amp;st=p2g01lbf&amp;dl=0" target="_blank" rel="noopener">
+      <a class="pub-title" href="https://www.dropbox.com/scl/fi/19y2kdrl86eufjzfkaqtj/JLE-ACCEPTED.pdf?dl=0&amp;rlkey=2e65mq2cpm7f6u7asqx9569gd" target="_blank" rel="noopener">
         Dual-edged benefits of drug policing: a quarter century’s lesson from a heroin drought
         <span class="abs">Using 25 years of monthly Australian postcode crime data and a triple‑difference design, we estimate the 2001 heroin drought caused a short‑run spike but sizable long‑run crime reductions—about 22% cumulatively over 18 years (≈AUD 2.2b/year in averted crime).</span>
       </a>
       <div class="pub-links">
-        <a href="https://www.dropbox.com/scl/fi/ls5sk62g96ce4ro1ttfx6/Heroin-Drought.pdf?rlkey=p40zg7ip7m0jlx9tzum7kptu8&amp;st=p2g01lbf&amp;dl=0" target="_blank" rel="noopener">Journal of Law and Economics (forthcoming)</a>
-        · <a href="https://www.researchgate.net/publication/361601897_Dual-edged_benefits_of_drug_policing_a_quarter_century's_lesson_from_a_heroin_drought" target="_blank" rel="noopener">Post-print</a>
-        · <a href="https://www.smh.com.au/national/pushing-up-the-price-of-heroin-cut-crime-why-isn-t-the-same-thing-happening-with-tobacco-20260203-p5nz6c.html" target="_blank" rel="noopener">The Age</a>
-        · <a href="https://x.com/SergeyVAlexeev/status/2018781981635698808" target="_blank" rel="noopener">X thread</a>
+        <a href="https://www.dropbox.com/scl/fi/19y2kdrl86eufjzfkaqtj/JLE-ACCEPTED.pdf?dl=0&amp;rlkey=2e65mq2cpm7f6u7asqx9569gd" target="_blank" rel="noopener">Journal of Law and Economics (forthcoming)</a>
+        · <a href="https://www.researchgate.net/publication/361601897_Dual-edged_benefits_of_drug_policing_a_quarter_century%27s_lesson_from_a_heroin_drought" target="_blank" rel="noopener">Post-print</a>
+        · <a href="https://twitter.com/SergeyVAlexeev/status/1720246822512558258" target="_blank" rel="noopener">Twitter thread</a>
       </div>
     </li>
 
@@ -419,7 +544,9 @@
       <div class="pub-links">
         <a href="https://doi.org/10.1111/ecin.13277" target="_blank" rel="noopener">Economic Inquiry (2025)</a>
         · <a href="https://www.researchgate.net/publication/377492875_A_closer_look_at_Doleac_and_Mukherjee_2022_and_the_effects_of_naloxone_access_laws_on_opioid_ER_admissions" target="_blank" rel="noopener">Post-print</a>
-        · <a href="https://filtermag.org/naloxone-moral-hazard-replication-study/" target="_blank" rel="noopener">Filter</a>
+        · <a href="https://www.dropbox.com/scl/fi/l2iki1wj88toqojstaxgr/Revision-letters.pdf?dl=0&amp;rlkey=u4crvdh7zr6r1xj9952tu2jz9" target="_blank" rel="noopener">Revision letters</a>
+        · <a href="https://filtermag.org/naloxone-moral-hazard-replication-study/" target="_blank" rel="noopener">Filter Magazine</a>
+        · <a href="https://app.dimensions.ai/details/publication/pub.1186347094" target="_blank" rel="noopener">Dimensions</a>
       </div>
     </li>
 
@@ -434,6 +561,7 @@
         · <a href="https://anmj.org.au/transforming-nursing-assessment-in-acute-hospitals/" target="_blank" rel="noopener">ANMJ</a>
         · <a href="https://medicalxpress.com/news/2024-02-nursing-acute-hospitals.html" target="_blank" rel="noopener">Medical Xpress</a>
         · <a href="https://www.miragenews.com/transforming-nursing-assessment-in-acute-1179174/" target="_blank" rel="noopener">Mirage.News</a>
+        · <a href="https://app.dimensions.ai/details/publication/pub.1167707833" target="_blank" rel="noopener">Dimensions</a>
       </div>
     </li>
 
@@ -446,13 +574,13 @@
         <a href="https://doi.org/10.1016/j.regsciurbeco.2022.103856" target="_blank" rel="noopener">Regional Science and Urban Economics (2023)</a>
         · <a href="https://www.researchgate.net/publication/366196579_Harm_reduction_or_amplification_The_adverse_impact_of_a_supervised_injection_room_on_housing_prices" target="_blank" rel="noopener">Post-print</a>
         · <a href="https://twitter.com/SergeyVAlexeev/status/1616259867291054080" target="_blank" rel="noopener">Twitter thread</a>
-        · <a href="https://youtu.be/pYBr6JSe7jA?si=uxyL3Ozik7sdiIL7" target="_blank" rel="noopener">7NEWS</a>
+        · <a href="https://youtu.be/1tisCEP_svI" target="_blank" rel="noopener">7NEWS</a>
         · <a href="https://www.theage.com.au/national/victoria/richmond-injecting-room-shaved-60-000-off-nearby-house-prices-study-20230503-p5d55c.html" target="_blank" rel="noopener">The Age</a>
-        · <a href="https://www.news.com.au/national/victoria/richmond-safe-injecting-room-has-cost-homeowners-thousands-according-to-new-study/news-story/26ac684a7238353eed7b31dba379cebc" target="_blank" rel="noopener">news.com.au</a>
+        · <a href="https://www.news.com.au/national/victoria/news/the-effect-is-large-richmond-safe-injecting-rooms-60k-cost-to-devastated-homeowners/news-story/26ac684a7238353eed7b31dba379cebc" target="_blank" rel="noopener">news.com.au</a>
         · <a href="https://www.hit.com.au/story/richmond-s-drug-injecting-room-to-stay-near-local-school-217486" target="_blank" rel="noopener">Hit Network</a>
         · <a href="https://www.cairnspost.com.au/news/national/the-effect-is-large-richmond-safe-injecting-rooms-60k-cost-to-devastated-homeowners/news-story/26ac684a7238353eed7b31dba379cebc" target="_blank" rel="noopener">Cairns Post</a>
-        · <a href="https://www.brisbanetimes.com.au/national/victoria/safe-injecting-room-s-opening-near-school-cut-housing-value-20221229-p5c8zb.html" target="_blank" rel="noopener">Brisbane Times</a>
-        · <a href="https://app.dimensions.ai/details/publication/pub.1156077099?and_facet_source=author&amp;and_facet_source=orcid&amp;and_facet_source=researcher&amp;and_facet_source=journal&amp;and_facet_source=repository&amp;and_facet_source=book&amp;and_facet_source=book_series" target="_blank" rel="noopener">Dimensions</a>
+        · <a href="https://www.brisbanetimes.com.au/national/victoria/richmond-injecting-room-shaved-60-000-off-nearby-house-prices-study-20230503-p5d55c.html" target="_blank" rel="noopener">Brisbane Times</a>
+        · <a href="https://app.dimensions.ai/details/publication/pub.1153565269" target="_blank" rel="noopener">Dimensions</a>
       </div>
     </li>
 
@@ -463,8 +591,8 @@
       </a>
       <div class="pub-links">
         <a href="https://doi.org/10.1108/IJM-08-2021-0475" target="_blank" rel="noopener">International Journal of Manpower (2022)</a>
-        · <a href="https://www.researchgate.net/profile/Sergey-Alexeev-4/publication/353654754_Wage_equation_misrepresents_gay_wage_discrimination_overlooked_evidence_from_Russia/links/633554379cb4fe44f3ea432f/Wage-equation-misrepresents-gay-wage-discrimination-overlooked-evidence-from-Russia.pdf" target="_blank" rel="noopener">Post-print</a>
-        · <a href="https://app.dimensions.ai/details/publication/pub.1148812414?and_facet_source=author&amp;and_facet_source=orcid&amp;and_facet_source=researcher&amp;and_facet_source=journal&amp;and_facet_source=repository&amp;and_facet_source=book&amp;and_facet_source=book_series" target="_blank" rel="noopener">Dimensions</a>
+        · <a href="https://www.researchgate.net/publication/364054421_Wage_equation_misrepresents_gay_wage_discrimination_overlooked_evidence_from_Russia" target="_blank" rel="noopener">Post-print</a>
+        · <a href="https://app.dimensions.ai/details/publication/pub.1151456101" target="_blank" rel="noopener">Dimensions</a>
       </div>
     </li>
 
@@ -476,8 +604,8 @@
       <div class="pub-links">
         <a href="https://doi.org/10.1016/j.jebo.2022.06.015" target="_blank" rel="noopener">Journal of Economic Behavior and Organization (2022)</a>
         · <a href="https://www.researchgate.net/publication/361844461_Fines_for_illicit_drug_use_do_not_prevent_future_crime_evidence_from_randomly_assigned_judges" target="_blank" rel="noopener">Post-print</a>
-        · <a href="https://www.daconnections.com.au/opinion/fines-for-illicit-drug-use-do-not-prevent-future-crime.html" target="_blank" rel="noopener">Drug and Alcohol Research Connections</a>
-        · <a href="https://app.dimensions.ai/details/publication/pub.1145066175?and_facet_source=author&amp;and_facet_source=orcid&amp;and_facet_source=researcher&amp;and_facet_source=journal&amp;and_facet_source=repository&amp;and_facet_source=book&amp;and_facet_source=book_series" target="_blank" rel="noopener">Dimensions</a>
+        · <a href="https://www.connections.edu.au/publicationhighlight/fines-illicit-drug-use-do-not-prevent-future-crime-evidence-randomly-assigned" target="_blank" rel="noopener">Drug and Alcohol Research Connections</a>
+        · <a href="https://app.dimensions.ai/details/publication/pub.1149112386" target="_blank" rel="noopener">Dimensions</a>
       </div>
     </li>
 
@@ -488,7 +616,7 @@
       </a>
       <div class="pub-links">
         <a href="https://onlinelibrary.wiley.com/doi/10.1111/ecot.12330" target="_blank" rel="noopener">Economics of Transition (2022)</a>
-        · <a href="https://www.researchgate.net/profile/Sergey-Alexeev-4/publication/360190628_Technical_change_and_wage_premiums_amongst_skilled_labour_Evidence_from_the_economic_transition/links/6268b71cbca601538b6bf59a/Technical-change-and-wage-premiums-amongst-skilled-labour-Evidence-from-the-economic-transition.pdf" target="_blank" rel="noopener">Post-print</a>
+        · <a href="https://www.researchgate.net/publication/343877771_Technical_change_and_wage_premiums_amongst_skilled_labor_evidence_from_the_economic_transition" target="_blank" rel="noopener">Post-print</a>
         · <a href="https://blogs.lse.ac.uk/europpblog/2022/05/11/western-sanctions-are-only-strengthening-putins-grip-on-power/" target="_blank" rel="noopener">EUROPP</a>
         · <a href="https://www.dropbox.com/scl/fi/jd578w47vr4lsf34ucqlm/RU_PREM_GSOM.pdf?dl=0&amp;rlkey=t8ckfx7uj470wfbk66govsjzh" target="_blank" rel="noopener">Slides</a>
       </div>
@@ -500,11 +628,11 @@
         <span class="abs">Using the 2013, 2016 and 2019 National Drug Strategy Household Surveys, we show growing support for cannabis legalisation and less punitive responses for some drugs, while support for legalising heroin and methamphetamine remains low.</span>
       </a>
       <div class="pub-links">
-        <a href="https://doi.org/10.1111/dar.13426" target="_blank" rel="noopener">Drug and Alcohol Review (2022)</a>
-        · <a href="https://europepmc.org/article/MED/34963035" target="_blank" rel="noopener">PubMed record</a>
-        · <a href="https://www.theguardian.com/australia-news/2019/sep/05/australians-back-decriminalising-drugs-for-personal-use-survey-finds" target="_blank" rel="noopener">The Guardian</a>
-        · <a href="https://www.forbes.com/sites/tarahaelle/2019/09/06/study-australians-increasingly-support-decriminalizing-or-legalizing-illicit-drugs/" target="_blank" rel="noopener">Forbes</a>
-        · <a href="https://app.dimensions.ai/details/publication/pub.1123295202?and_facet_source=author&amp;and_facet_source=orcid&amp;and_facet_source=researcher&amp;and_facet_source=journal&amp;and_facet_source=repository&amp;and_facet_source=book&amp;and_facet_source=book_series" target="_blank" rel="noopener">Dimensions</a>
+        <a href="https://doi.org/10.1111/dar.13426" target="_blank" rel="noopener">Drug and Alcohol Review (2021)</a>
+        · <a href="https://www.researchgate.net/publication/357390147_Changes_in_and_correlates_of_Australian_public_attitudes_toward_illicit_drug_use" target="_blank" rel="noopener">Post-print</a>
+        · <a href="https://www.theguardian.com/australia-news/2021/dec/29/support-for-legalising-marijuana-in-australia-nearly-doubles-over-six-years" target="_blank" rel="noopener">The Guardian</a>
+        · <a href="https://www.forbes.com/sites/ajherrington/2021/12/29/support-for-marijuana-legalization-in-australia-nearly-doubles-in-six-years/?ref=altdnt" target="_blank" rel="noopener">Forbes</a>
+        · <a href="https://app.dimensions.ai/details/publication/pub.1144231878" target="_blank" rel="noopener">Dimensions</a>
       </div>
     </li>
 
@@ -515,10 +643,10 @@
       </a>
       <div class="pub-links">
         <a href="https://doi.org/10.1016/j.drugpo.2021.103399" target="_blank" rel="noopener">International Journal of Drug Policy (2021)</a>
-        · <a href="https://www.researchgate.net/profile/Sergey-Alexeev-4/publication/355871730_The_Australian_ready-to-drink_beverages_tax_missed_its_target_age_group/links/618b9e73d7d1af224bd028f7/The-Australian-ready-to-drink-beverages-tax-missed-its-target-age-group.pdf" target="_blank" rel="noopener">Post-print</a>
+        · <a href="https://www.researchgate.net/publication/345045309_The_Australian_ready-to-drink_beverages_tax_missed_its_target_age_group" target="_blank" rel="noopener">Post-print</a>
         · <a href="https://twitter.com/SergeyVAlexeev/status/1437614229255716865" target="_blank" rel="noopener">Twitter thread</a>
-        · <a href="https://austaxpolicy.com/australias-current-alcohol-tax-system-impedes-public-health-policy/" target="_blank" rel="noopener">Austaxpolicy</a>
-        · <a href="https://app.dimensions.ai/details/publication/pub.1136146381?and_facet_source=author&amp;and_facet_source=orcid&amp;and_facet_source=researcher&amp;and_facet_source=journal&amp;and_facet_source=repository&amp;and_facet_source=book&amp;and_facet_source=book_series" target="_blank" rel="noopener">Dimensions</a>
+        · <a href="https://www.austaxpolicy.com/australias-current-alcohol-tax-system-impedes-public-health-policy/" target="_blank" rel="noopener">Austaxpolicy</a>
+        · <a href="https://app.dimensions.ai/details/publication/pub.1140408432" target="_blank" rel="noopener">Dimensions</a>
       </div>
     </li>
 
@@ -530,9 +658,12 @@
       <div class="pub-links">
         <a href="https://doi.org/10.1016/j.jhe.2020.101710" target="_blank" rel="noopener">Journal of Housing Economics (2020)</a>
         · <a href="https://www.researchgate.net/publication/342671632_The_Role_of_Imputed_Rents_in_Intergenerational_Income_Mobility_in_Three_Countries" target="_blank" rel="noopener">Post-print</a>
+        · <a href="https://twitter.com/SergeyVAlexeev/status/1429336180135325712?s=20" target="_blank" rel="noopener">Twitter thread</a>
         · <a href="https://cepr.org/voxeu/columns/comparing-effects-homeownership-intergenerational-income-mobility-us-germany-and" target="_blank" rel="noopener">VoxEU</a>
-        · <a href="https://austaxpolicy.com/covid-19-and-australias-housing-crisis-how-the-intergenerational-impact-can-go-undetected/" target="_blank" rel="noopener">Austaxpolicy</a>
+        · <a href="https://www.uts.edu.au/news/business-law/parental-home-provides-leg-income-ladder" target="_blank" rel="noopener">UTS News</a>
+        · <a href="https://www.austaxpolicy.com/covid-19-and-australias-housing-crisis-how-the-intergenerational-impact-can-go-undetected/" target="_blank" rel="noopener">Austaxpolicy</a>
         · <a href="https://theconversation.com/yes-we-are-a-more-equal-society-than-most-but-not-quite-as-mobile-as-the-productivity-commission-suggests-heres-why-234804" target="_blank" rel="noopener">The Conversation</a>
+        · <a href="https://app.dimensions.ai/details/publication/pub.1128978508" target="_blank" rel="noopener">Dimensions</a>
       </div>
     </li>
 
@@ -653,6 +784,50 @@
 <script>
   const d = new Date(document.lastModified);
   document.getElementById('lu').textContent = d.toISOString().slice(0,10);
+</script>
+
+<script>
+  (function () {
+    const nav = document.getElementById('sidenav');
+    const toggle = document.getElementById('nav-toggle');
+    const scrim = document.getElementById('nav-scrim');
+    const closeBtn = document.getElementById('nav-close');
+    if (!nav || !toggle || !scrim) return;
+
+    function openNav() {
+      nav.classList.add('open');
+      scrim.classList.add('open');
+      scrim.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('nav-open');
+    }
+
+    function closeNav() {
+      nav.classList.remove('open');
+      scrim.classList.remove('open');
+      scrim.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('nav-open');
+    }
+
+    toggle.addEventListener('click', function () {
+      if (nav.classList.contains('open')) closeNav();
+      else openNav();
+    });
+
+    scrim.addEventListener('click', closeNav);
+    if (closeBtn) closeBtn.addEventListener('click', closeNav);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeNav();
+    });
+
+    nav.addEventListener('click', function (e) {
+      const a = e.target.closest && e.target.closest('a');
+      if (!a) return;
+      if (window.matchMedia && window.matchMedia('(max-width: 900px)').matches) closeNav();
+    });
+  })();
 </script>
 
 <script>
