@@ -388,6 +388,7 @@ body.nav-open{
 }
 
 
+/* Ask Sergey AI */
 #chat-fab{
   position: fixed;
   right: 18px;
@@ -401,12 +402,28 @@ body.nav-open{
   cursor: pointer;
 }
 
+#chat-scrim{
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(0,0,0,.35);
+}
+
+body.chat-open{
+  overflow: hidden;
+}
+
+/* Hide the floating button when chat is open (prevents accidental overlap/taps) */
+body.chat-open #chat-fab{
+  display: none;
+}
+
 #chat-panel{
   position: fixed;
   right: 18px;
   bottom: 68px;
   width: min(420px, calc(100vw - 36px));
-  height: min(520px, calc(100vh - 120px));
+  height: min(520px, calc(100vh - 140px)); /* slightly less tall */
   z-index: 9999;
   background: #0b0b0b;
   color: #fff;
@@ -431,9 +448,9 @@ body.nav-open{
   background: transparent;
   color: #fff;
   border: 1px solid rgba(255,255,255,.2);
-  border-radius: 10px;
-  width: 34px;
-  height: 34px;
+  border-radius: 12px;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
 }
 
@@ -488,6 +505,20 @@ body.nav-open{
   font-size: 12px;
   opacity: .75;
 }
+
+/* Mobile: make it a bottom sheet (not “full screen”) */
+@media (max-width: 640px){
+  #chat-panel{
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    width: auto;
+    height: min(62vh, 460px);
+    border-radius: 16px;
+  }
+}
+
+
 
 
   </style>
@@ -970,10 +1001,12 @@ body.nav-open{
 </script>
 
 
+
 <!-- Ask Sergey AI -->
 <button id="chat-fab" type="button" aria-expanded="false">Ask Sergey AI</button>
+<div id="chat-scrim" hidden></div>
 
-<div id="chat-panel" hidden>
+<div id="chat-panel" hidden aria-hidden="true">
   <div class="chat-head">
     <div>Ask Sergey AI</div>
     <button id="chat-close" type="button" aria-label="Close">×</button>
@@ -996,6 +1029,7 @@ body.nav-open{
   const API_URL = "https://alexeev-website-chat.sergei-v-alexeev.workers.dev";
 
   const fab = document.getElementById("chat-fab");
+  const scrim = document.getElementById("chat-scrim");
   const panel = document.getElementById("chat-panel");
   const closeBtn = document.getElementById("chat-close");
   const log = document.getElementById("chat-log");
@@ -1003,6 +1037,27 @@ body.nav-open{
   const input = document.getElementById("chat-input");
 
   const messages = [];
+
+  function setOpen(isOpen){
+    panel.hidden = !isOpen;
+    panel.setAttribute("aria-hidden", String(!isOpen));
+    scrim.hidden = !isOpen;
+    fab.setAttribute("aria-expanded", String(isOpen));
+    document.body.classList.toggle("chat-open", isOpen);
+
+    if (isOpen) {
+      // let layout settle then focus
+      setTimeout(() => {
+        input.focus();
+        input.scrollIntoView({ block: "nearest" });
+      }, 50);
+
+      if (!messages.length) {
+        add("assistant",
+          "Paste a role or project brief. I’ll answer whether Sergey has done similar work and what he’d likely do.");
+      }
+    }
+  }
 
   function add(role, text) {
     messages.push({ role, content: text });
@@ -1015,25 +1070,24 @@ body.nav-open{
     log.scrollTop = log.scrollHeight;
   }
 
-  function open() {
-    panel.hidden = false;
-    fab.setAttribute("aria-expanded", "true");
-    input.focus();
-    if (!messages.length) {
-      add("assistant",
-        "Paste a role or project brief. I’ll answer whether Sergey has done similar work and what he’d likely do.");
-    }
-  }
+  fab?.addEventListener("click", (e) => {
+    e.preventDefault();
+    setOpen(panel.hidden); // toggle
+  });
 
-  function close() {
-    panel.hidden = true;
-    fab.setAttribute("aria-expanded", "false");
-  }
+  closeBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setOpen(false);
+  });
 
-  fab.addEventListener("click", () => panel.hidden ? open() : close());
-  closeBtn.addEventListener("click", close);
+  scrim?.addEventListener("click", () => setOpen(false));
 
-  form.addEventListener("submit", async (e) => {
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") setOpen(false);
+  });
+
+  form?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const text = input.value.trim();
     if (!text) return;
@@ -1057,13 +1111,14 @@ body.nav-open{
       const data = await r.json();
       placeholder.remove();
       add("assistant", data.text || "(no response)");
-    } catch (err) {
+    } catch {
       placeholder.remove();
       add("assistant", "Error talking to server. Try again.");
     }
   });
 })();
 </script>
+
 
 </body>
 </html>
