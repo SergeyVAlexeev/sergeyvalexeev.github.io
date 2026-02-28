@@ -389,6 +389,12 @@ body.nav-open{
 
 
 /* Ask Sergey AI */
+/* Make sure the HTML `hidden` attribute actually hides these (our CSS sets display/grid) */
+#chat-panel[hidden],
+#chat-scrim[hidden]{
+  display: none !important;
+}
+
 #chat-fab{
   position: fixed;
   right: 18px;
