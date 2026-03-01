@@ -399,6 +399,22 @@ body.nav-open{
   z-index: 80;
 }
 
+.inline-tip .info .tip a{
+  color: var(--link);
+  text-decoration: none;
+}
+
+.inline-tip .info .tip a:hover{
+  text-decoration: underline;
+}
+
+.inline-tip .info .tip .tip-more{
+  display: block;
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+
 .inline-tip .info:hover .tip,
 .inline-tip .info:focus .tip{
   opacity: 1;
@@ -672,12 +688,14 @@ body.chat-open #chat-fab{
         <a href="https://www.cancer.nsw.gov.au/research-and-data/nsw-population-health-services-research-ethics-com/committee-members" target="_blank" rel="noopener">NSW Population &amp; Health Services Research Ethics Committee (PHSREC)</a>.
 
         <span class="inline-tip">
-          I’m of Ingrian-Finn heritage
-          <span class="info" tabindex="0" role="button" aria-label="More about Ingrian-Finn heritage">ⓘ
+          I’m of Ingrian-Finn heritage.<span class="info" tabindex="0" role="button" aria-label="More about Ingrian-Finn heritage">ⓘ
             <span class="tip" role="note">
-              Ingrian Finns are a Finnish-speaking minority historically rooted in Ingria (around St Petersburg). Many families experienced displacement and assimilation pressures across the 20th century.
+              Ingrian Finns are a Finnish-speaking minority historically rooted in Ingria (around St Petersburg). Many families experienced
+<a href="https://en.wikipedia.org/wiki/Genocide_of_the_Ingrian_Finns" target="_blank" rel="noopener">
+  displacement and assimilation pressures</a>
+across the 20th century.
             </span>
-          </span>.
+          </span>
         </span>
       </p>
     </div>
