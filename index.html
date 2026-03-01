@@ -343,6 +343,70 @@ body.nav-open{
   transform: translateY(0);
 }
 
+
+/* Inline “heritage” tooltip (hover on desktop, tap/focus on mobile) */
+/* Inline “heritage” info cue (hover on desktop, tap/focus on mobile) */
+.inline-tip{
+  display: inline;
+}
+
+/* Small cue icon; this is the interactive target */
+.inline-tip .info{
+  position: relative;
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 0.85em;
+  line-height: 1;
+  vertical-align: text-top;
+  color: var(--muted);
+  cursor: help;
+  user-select: none;
+}
+
+.inline-tip .info:hover{
+  color: var(--link);
+}
+
+.inline-tip .info:focus{
+  outline: 2px solid var(--link);
+  outline-offset: 3px;
+  border-radius: 6px;
+  color: var(--link);
+}
+
+/* The hover panel */
+.inline-tip .info .tip{
+  position: absolute;
+  left: 0;
+  top: 1.6em;
+  width: min(520px, 86vw);
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 10px 12px;
+
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 400;
+  color: var(--muted);
+
+  box-shadow: 0 10px 28px rgba(0,0,0,.22);
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity .14s ease, transform .14s ease, visibility .14s;
+  z-index: 80;
+}
+
+.inline-tip .info:hover .tip,
+.inline-tip .info:focus .tip{
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+
 .pub-meta{
   color: var(--muted);
   font-size: 14px;
@@ -606,6 +670,15 @@ body.chat-open #chat-fab{
         <a href="https://www.sciencedirect.com/journal/international-journal-of-drug-policy/about/editorial-board" target="_blank" rel="noopener">Editorial Board</a>
         of the <i>International Journal of Drug Policy</i>, and I’m a member of the
         <a href="https://www.cancer.nsw.gov.au/research-and-data/nsw-population-health-services-research-ethics-com/committee-members" target="_blank" rel="noopener">NSW Population &amp; Health Services Research Ethics Committee (PHSREC)</a>.
+
+        <span class="inline-tip">
+          I’m of Ingrian-Finn heritage
+          <span class="info" tabindex="0" role="button" aria-label="More about Ingrian-Finn heritage">ⓘ
+            <span class="tip" role="note">
+              Ingrian Finns are a Finnish-speaking minority historically rooted in Ingria (around St Petersburg). Many families experienced displacement and assimilation pressures across the 20th century.
+            </span>
+          </span>.
+        </span>
       </p>
     </div>
 
