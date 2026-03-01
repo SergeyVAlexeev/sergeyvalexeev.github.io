@@ -527,7 +527,30 @@ body.chat-open #chat-fab{
 
 
 
-  </style>
+  
+
+    /* Collapsible publication subsections (no JS) */
+    details.pub-fold{
+      margin-top: 12px;
+    }
+    details.pub-fold > summary{
+      list-style: none;
+      cursor: pointer;
+      user-select: none;
+      font-size: 16px;
+      font-weight: 600;
+      margin: 16px 0 6px;
+    }
+    details.pub-fold > summary::-webkit-details-marker{ display:none; }
+    details.pub-fold > summary::before{
+      content: "▸";
+      display: inline-block;
+      width: 1.1em;
+      color: var(--muted);
+      transform: translateY(-1px);
+    }
+    details.pub-fold[open] > summary::before{ content: "▾"; }
+</style>
 </head>
 <body>
   <div class="topbar">
@@ -984,14 +1007,17 @@ body.chat-open #chat-fab{
 
   </ul>
 
-  <h3>Other Writing</h3>
+  <details class="pub-fold">
+  <summary>Other writing</summary>
   <ul class="publist">
     <li><a class="pub-title" href="https://data.rcsi.science/publications/news/147/" target="_blank" rel="noopener">Доказательная государственная политика: опыт Австралии</a></li>
     <li><a class="pub-title" href="https://gsom.spbu.ru/students/blog/blog2017_02_13/" target="_blank" rel="noopener">Умом пощупать то, что глазами не увидеть</a></li>
   </ul>
+</details>
 
 
-<h3> Forthcoming &amp; Under Review</h3>
+<details class="pub-fold">
+  <summary>Forthcoming &amp; Under Review</summary>
   <ul class="publist">
 <!-- 
     <li><a class="pub-title" href="https://www.researchgate.net/publication/369788106_Booze_Bruises_A_Century-Old_Natural_Experiment_on_Causal_Link_Between_Pubs_and_Crime" target="_blank" rel="noopener">Booze & Bruises: A Century-Old Natural Experiment on Causal Link Between Pubs and Crime</a></li> -->
@@ -1018,11 +1044,12 @@ body.chat-open #chat-fab{
 
 
   </ul>
+</details>
 
 
 
-<h3> Work in Progress</h3>
-
+<details class="pub-fold">
+  <summary>Work in Progress</summary>
   <ul class="publist">
 
     <li><a class="pub-title" href="https://www.researchgate.net/publication/369788106_Booze_Bruises_A_Century-Old_Natural_Experiment_on_Causal_Link_Between_Pubs_and_Crime" target="_blank" rel="noopener">Booze & Bruises: A Century-Old Natural Experiment on Causal Link Between Pubs and Crime</a></li>
@@ -1051,6 +1078,7 @@ body.chat-open #chat-fab{
 
 
   </ul>
+</details>
 
 </section>
      
