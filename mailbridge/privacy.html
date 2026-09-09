@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MailBridge privacy policy</title>
-  <meta name="description" content="Privacy policy for the MailBridge Windows desktop utility by Sergey Alexeev." />
+  <title>ReplyPort privacy policy</title>
+  <meta name="description" content="Privacy policy for the ReplyPort Windows desktop utility by Sergey Alexeev." />
   <link rel="canonical" href="https://www.alexeev.pw/mailbridge/privacy.html" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate icon" href="/favicon.ico" sizes="any">
@@ -104,61 +104,61 @@
 <body>
   <nav class="topnav" aria-label="Site navigation">
     <a class="site-link" href="/">alexeev.pw</a>
-    <span class="status-pill">Free private alpha</span>
+    <span class="status-pill">Early access</span>
   </nav>
 
   <header class="hero">
-    <p class="hero-label">MailBridge · Privacy policy</p>
+    <p class="hero-label">ReplyPort · Privacy policy</p>
     <h1>Local by design.<br>Under your control.</h1>
-    <p class="hero-standfirst">MailBridge is a Windows desktop utility by Sergey Alexeev for user-authorized Outlook Classic workflows and AI-assisted analysis and drafting. This policy describes the current Free private-alpha product.</p>
-    <p class="effective-date">Effective date: 26 August 2026</p>
+    <p class="hero-standfirst">ReplyPort is a Windows desktop utility by Sergey Alexeev for user-authorized Outlook Classic workflows and AI-assisted analysis and drafting. This policy describes the current early-access product.</p>
+    <p class="effective-date">Effective date: 9 September 2026</p>
   </header>
 
   <main>
     <section id="overview">
       <p class="section-label">Overview</p>
-      <h2>What MailBridge does</h2>
-      <p>MailBridge works locally with Outlook Classic. It makes approved Outlook information available in a user-selected filesystem location so that a user-chosen AI assistant or other approved tool can help search, analyse and draft a reply. MailBridge can then create a reply draft in Outlook Classic.</p>
-      <div class="callout"><strong>Draft only.</strong> MailBridge does not automatically send email. It does not send mail through SMTP, Microsoft Graph or another cloud mail transport. The user must review every generated draft and manually decide whether to send it in Outlook.</div>
-      <p>MailBridge does not operate a remote email server, a hosted AI model or a MailBridge cloud service.</p>
+      <h2>What ReplyPort does</h2>
+      <p>ReplyPort works locally with Outlook Classic. It makes approved Outlook information available in a user-selected filesystem location so that a user-chosen AI assistant or other approved tool can help search, analyse and draft a reply. ReplyPort can then create a reply draft in Outlook Classic.</p>
+      <div class="callout"><strong>Draft only.</strong> ReplyPort does not automatically send email. It does not send mail through SMTP, Microsoft Graph or another cloud mail transport. The user must review every generated draft and manually decide whether to send it in Outlook.</div>
+      <p>ReplyPort does not operate a remote email server, a hosted AI model or a ReplyPort cloud service.</p>
     </section>
 
     <section id="information">
       <p class="section-label">Information</p>
       <h2>Personal information accessed and why</h2>
-      <p>MailBridge accesses the following information only as needed for functions the user authorizes:</p>
+      <p>ReplyPort accesses the following information only as needed for functions the user authorizes:</p>
       <ul>
         <li><strong>Outlook message content and metadata:</strong> message body text, subject, sender and recipient details, date, conversation information, message identifiers, sensitivity/protection state and attachment metadata. This supports approved export, search, analysis, triage, reply drafting, threading and safety checks.</li>
-        <li><strong>Outlook account and routing information:</strong> the configured account address, Outlook profile/store/folder information, approved signature information and local Outlook item locators. This lets MailBridge keep work within the correct mailbox, preserve Outlook's recipients and conversation, and place the draft in the correct Drafts folder.</li>
+        <li><strong>Outlook account and routing information:</strong> the configured account address, Outlook profile/store/folder information, approved signature information and local Outlook item locators. This lets ReplyPort keep work within the correct mailbox, preserve Outlook's recipients and conversation, and place the draft in the correct Drafts folder.</li>
         <li><strong>Approved attachment content:</strong> attachment bytes are made available only after local approval and validation when that content is needed for a user-authorized task.</li>
         <li><strong>Operational information:</strong> configuration, opaque identifiers, capability material, hashes, indexes, checkpoints, journals, status, error codes and bounded work counts. This supports security, integrity, recovery, deduplication and diagnostics.</li>
       </ul>
-      <p>MailBridge refuses protected or incomplete message content for drafting. It does not use personal information for advertising and does not sell personal information.</p>
+      <p>ReplyPort refuses protected or incomplete message content for drafting. It does not use personal information for advertising and does not sell personal information.</p>
     </section>
 
     <section id="storage">
       <p class="section-label">Storage and protection</p>
       <h2>Where information is stored</h2>
       <h3>User-selected storage</h3>
-      <p>The user chooses MailBridge's filesystem storage root. Message snapshots, message metadata, user-authorized AI work records and approved attachment files are stored there. The location may be inside a Dropbox folder.</p>
-      <p>If the user chooses Dropbox-backed storage, the Dropbox desktop software may sync the MailBridge folder through the user's own Dropbox account. That processing is controlled by the user and is subject to Dropbox's terms and privacy policy. MailBridge does not use the Dropbox cloud API.</p>
+      <p>The user chooses ReplyPort's filesystem storage root. Message snapshots, message metadata, user-authorized AI work records and approved attachment files are stored there. The location may be inside a Dropbox folder.</p>
+      <p>If the user chooses Dropbox-backed storage, the Dropbox desktop software may sync the ReplyPort storage folder through the user's own Dropbox account. That processing is controlled by the user and is subject to Dropbox's terms and privacy policy. ReplyPort does not use the Dropbox cloud API.</p>
 
       <h3>Local operational state</h3>
-      <p>MailBridge keeps operational state under the current user's local Windows profile. This is limited to configuration, protected Outlook routing state, DPAPI-protected capability keys and journals, hashes, indexes, checkpoints, retry state and content-free logs. Local logs contain operational identifiers, states, durations, error codes and bounded counts—not email subjects, bodies, senders, recipients or attachment filenames.</p>
+      <p>ReplyPort keeps operational state under the current user's local Windows profile. This is limited to configuration, protected Outlook routing state, DPAPI-protected capability keys and journals, hashes, indexes, checkpoints, retry state and content-free logs. Local logs contain operational identifiers, states, durations, error codes and bounded counts—not email subjects, bodies, senders, recipients or attachment filenames.</p>
 
       <h3>Safeguards</h3>
-      <p>MailBridge uses the current Windows user's filesystem permissions, Windows Data Protection API protection for local secrets and sensitive operational state, opaque mailbox identifiers, mailbox-scoped capabilities, immutable records and strict routing and draft verification. A storage root's per-mailbox folders provide logical separation; they are not a substitute for access controls. The user is responsible for securing the Windows account, Outlook profile, selected storage location, Dropbox account and any external AI account they choose.</p>
+      <p>ReplyPort uses the current Windows user's filesystem permissions, Windows Data Protection API protection for local secrets and sensitive operational state, opaque mailbox identifiers, mailbox-scoped capabilities, immutable records and strict routing and draft verification. A storage root's per-mailbox folders provide logical separation; they are not a substitute for access controls. The user is responsible for securing the Windows account, Outlook profile, selected storage location, Dropbox account and any external AI account they choose.</p>
     </section>
 
     <section id="third-parties">
       <p class="section-label">Services you choose</p>
       <h2>When third parties may process information</h2>
-      <p>MailBridge itself does not upload personal information to Sergey Alexeev or a MailBridge-operated server. The current product contains no MailBridge analytics or telemetry.</p>
+      <p>ReplyPort itself does not upload personal information to Sergey Alexeev or a ReplyPort-operated server. The current product contains no ReplyPort analytics or telemetry.</p>
       <p>Information may nevertheless be processed by these categories of third party through services the user has selected:</p>
       <ul>
-        <li><strong>Microsoft and the user's mailbox provider</strong> continue to process Outlook mailbox data under the account and service the user already uses. MailBridge's local Outlook integration does not replace those arrangements.</li>
-        <li><strong>Dropbox or another storage/sync provider</strong> may process files if the user puts the MailBridge storage root in that provider's synced location.</li>
-        <li><strong>An external AI service or AI-enabled tool</strong> may process the MailBridge data that the user intentionally makes available to it for analysis or drafting.</li>
+        <li><strong>Microsoft and the user's mailbox provider</strong> continue to process Outlook mailbox data under the account and service the user already uses. ReplyPort's local Outlook integration does not replace those arrangements.</li>
+        <li><strong>Dropbox or another storage/sync provider</strong> may process files if the user puts the ReplyPort storage root in that provider's synced location.</li>
+        <li><strong>An external AI service or AI-enabled tool</strong> may process the ReplyPort data that the user intentionally makes available to it for analysis or drafting.</li>
       </ul>
       <p>Each selected service operates under its own terms and privacy policy. Users should review those terms and only make mailbox information available to a service they are permitted and willing to use.</p>
     </section>
@@ -166,32 +166,32 @@
     <section id="ai">
       <p class="section-label">Generative AI</p>
       <h2>AI-assisted output requires review</h2>
-      <p>MailBridge is designed for AI-assisted analysis and drafting. The current product does not itself provide a hosted generative-AI model; the user chooses whether to use an external AI service or AI-enabled tool.</p>
+      <p>ReplyPort is designed for AI-assisted analysis and drafting. The current product does not itself provide a hosted generative-AI model; the user chooses whether to use an external AI service or AI-enabled tool.</p>
       <div class="callout">Generative-AI output can be inaccurate, incomplete, biased or inappropriate. The user must review and, where necessary, edit every draft before deciding whether to send it.</div>
-      <p>To report inappropriate AI-generated content associated with MailBridge, email <a href="mailto:sergei.v.alexeev@gmail.com?subject=MailBridge%20AI%20content%20report">sergei.v.alexeev@gmail.com</a>. Please do not include confidential email content unless it is necessary to investigate the report.</p>
+      <p>To report inappropriate AI-generated content associated with ReplyPort, email <a href="mailto:sergei.v.alexeev@gmail.com?subject=ReplyPort%20AI%20content%20report">sergei.v.alexeev@gmail.com</a>. Please do not include confidential email content unless it is necessary to investigate the report.</p>
     </section>
 
     <section id="retention-controls">
       <p class="section-label">Retention and controls</p>
       <h2>Your choices</h2>
-      <p>MailBridge's bounded mirror copies normally expire 90 days after the source message's received or sent date, although records needed for pending work may be retained until that work is resolved. Disposable search requests and results normally expire after seven days. Approved staged attachments normally expire after 24 hours or when the dependent request completes, whichever comes first.</p>
-      <p>The user controls MailBridge and can:</p>
+      <p>ReplyPort's bounded mirror copies normally expire 90 days after the source message's received or sent date, although records needed for pending work may be retained until that work is resolved. Disposable search requests and results normally expire after seven days. Approved staged attachments normally expire after 24 hours or when the dependent request completes, whichever comes first.</p>
+      <p>The user controls ReplyPort and can:</p>
       <ul>
         <li>choose the storage location and stop using or remove that location;</li>
-        <li>disable MailBridge to stop its background processing;</li>
+        <li>disable ReplyPort to stop its background processing;</li>
         <li>choose whether to use any external AI service or AI-enabled tool;</li>
-        <li>delete MailBridge files from the user's own selected storage; and</li>
-        <li>uninstall MailBridge to remove its local application, configuration and runtime state.</li>
+        <li>delete ReplyPort files from the user's own selected storage; and</li>
+        <li>uninstall ReplyPort to remove its local application, configuration and runtime state.</li>
       </ul>
-      <p>Disabling or uninstalling MailBridge does not delete, move or otherwise change messages in Outlook. Uninstalling also leaves Dropbox or other user-selected storage content untouched so that it is not silently destroyed. The user may delete MailBridge's files from that storage separately when appropriate.</p>
+      <p>Disabling or uninstalling ReplyPort does not delete, move or otherwise change messages in Outlook. Uninstalling also leaves Dropbox or other user-selected storage content untouched so that it is not silently destroyed. The user may delete ReplyPort's files from that storage separately when appropriate.</p>
     </section>
 
     <section id="contact">
       <p class="section-label">Contact</p>
       <h2>Privacy questions and reports</h2>
-      <p>MailBridge is published and developed by <strong>Sergey Alexeev</strong>.</p>
+      <p>ReplyPort is published and developed by <strong>Sergey Alexeev</strong>.</p>
       <p>For privacy questions, requests, concerns or reports of inappropriate AI-generated content, contact <a href="mailto:sergei.v.alexeev@gmail.com">sergei.v.alexeev@gmail.com</a>.</p>
-      <p class="muted">This policy may be updated if MailBridge's data practices change. The effective date above identifies the current version.</p>
+      <p class="muted">This policy may be updated if ReplyPort's data practices change. The effective date above identifies the current version.</p>
     </section>
   </main>
 
