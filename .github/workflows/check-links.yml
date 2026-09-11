@@ -1,32 +1,46 @@
-name: Check links
+name: One-shot JCEC publication update
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 20 * * 0" # weekly, Sunday 20:00 UTC
+  push:
+    branches: [main]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  link-check:
+  add-jcec-paper:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check live website links
-        uses: lycheeverse/lychee-action@v2
-        with:
-          fail: true
-          args: >
-            --verbose
-            --no-progress
-            --method get
-            --max-retries 3
-            --max-concurrency 4
-            --accept "100..=103,200..=299,403,405,429,999"
-            --exclude "^https://www[.]sciencedirect[.]com/journal/international-journal-of-drug-policy/about/editorial-board/?$"
-            "https://www.alexeev.pw/"
-            "https://www.alexeev.pw/hope/"
-            "https://www.alexeev.pw/family/"
-            "https://www.alexeev.pw/revalue-au/"
-            "https://www.alexeev.pw/mailbridge/privacy.html"
+      - uses: actions/checkout@v4
+      - name: Add JCEC paper at top of publications
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          doi = 'https://doi.org/10.1007/s10824-026-09607-y'
+          if doi in s:
+              raise SystemExit(0)
+
+          heading = '<h3>Journal articles &amp; related media coverage</h3>'
+          h = s.find(heading)
+          if h < 0:
+              raise SystemExit('Journal articles heading not found')
+          ul = s.find('<ul class="publist">', h)
+          if ul < 0:
+              raise SystemExit('Journal articles list not found')
+          pos = ul + len('<ul class="publist">')
+
+          card = base64.b64decode('PGxpPgogIDxhIGNsYXNzPSJwdWItdGl0bGUiIGhyZWY9Imh0dHBzOi8vZG9pLm9yZy8xMC4xMDA3L3MxMDgyNC0wMjYtMDk2MDcteSIgdGFyZ2V0PSJfYmxhbmsiIHJlbD0ibm9vcGVuZXIiPgogICAgV2h5IHR3ZWx2ZSBub3Rlcz8gQW4gZWNvbm9taWMgbW9kZWwgb2Ygc2NhbGUgc2l6ZSBhbmQgZXZpZGVuY2Ugb24gY2hyb21hdGljIHBpdGNoLWNsYXNzIHVzZSBpbiBXZXN0ZXJuIGNsYXNzaWNhbCBtdXNpYywgMTQ4NeKAkzE5NjMKICAgIDxzcGFuIGNsYXNzPSJhYnMiPldlIG1vZGVsIG11c2ljYWwgc2NhbGUgc2l6ZSBhcyBhIHRyYWRlLW9mZiBiZXR3ZWVuIGhhcm1vbmljIGdhaW5zIGFuZCBjb25zdHJ1Y3Rpb24gYW5kIGxlYXJuaW5nIGNvc3RzLCBhbmQgc2hvdyB3aXRoIDYyMyBjbGFzc2ljYWwgY29tcG9zaXRpb25zIHRoYXQgY2hyb21hdGljIHBpdGNoIHVzZSBleHBhbmRlZCBoaXN0b3JpY2FsbHkgYmVmb3JlIHNhdHVyYXRpbmcgd2l0aGluIGEgdHdlbHZlLW5vdGUgcGFsZXR0ZS48L3NwYW4+CiAgPC9hPgogIDxkaXYgY2xhc3M9InB1Yi1saW5rcyI+CiAgICA8YSBocmVmPSJodHRwczovL2RvaS5vcmcvMTAuMTAwNy9zMTA4MjQtMDI2LTA5NjA3LXkiIHRhcmdldD0iX2JsYW5rIiByZWw9Im5vb3BlbmVyIj5Kb3VybmFsIG9mIEN1bHR1cmFsIEVjb25vbWljcyAoMjAyNik8L2E+CiAgPC9kaXY+CjwvbGk+Cgo=').decode('utf-8')
+          s = s[:pos] + '\n\n' + card + s[pos:]
+          p.write_text(s, encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Add JCEC twelve notes paper"
+          git push
