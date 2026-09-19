@@ -25,6 +25,7 @@ jobs:
             --max-concurrency 4
             --accept "100..=103,200..=299,403,405,429,999"
             --exclude "^https://www[.]sciencedirect[.]com/journal/international-journal-of-drug-policy/about/editorial-board/?$"
+            --exclude "^https://data[.]rcsi[.]science/publications/news/147/?$"
             "https://www.alexeev.pw/"
             "https://www.alexeev.pw/hope/"
             "https://www.alexeev.pw/family/"
