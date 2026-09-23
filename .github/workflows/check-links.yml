@@ -1,38 +1,33 @@
-name: One-shot Russia Talk link update
+name: Check links
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "0 20 * * 0" # weekly, Sunday 20:00 UTC
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  patch-russia-talk:
+  link-check:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Add Russia Talk podcast link
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          p = Path('index.html')
-          s = p.read_text(encoding='utf-8')
-          anchor = '    · <a href="https://ridl.io/the-kremlin-s-veteran-hero-cult-stops-at-the-workplace-door/" target="_blank" rel="noopener">Riddle</a>\n'
-          addition = '    · <a href="https://youtu.be/2bEqMO1bOpA" target="_blank" rel="noopener">Russia Talk</a>\n'
-
-          if addition in s:
-              raise SystemExit(0)
-          if s.count(anchor) != 1:
-              raise SystemExit(f'Expected one Riddle anchor, found {s.count(anchor)}')
-
-          p.write_text(s.replace(anchor, anchor + addition, 1), encoding='utf-8')
-          PY
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m "Add Russia Talk podcast to veterans paper"
-          git push
+      - name: Check live website links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          fail: true
+          args: >
+            --verbose
+            --no-progress
+            --method get
+            --max-retries 3
+            --max-concurrency 4
+            --accept "100..=103,200..=299,403,405,429,999"
+            --exclude "^https://www[.]sciencedirect[.]com/journal/international-journal-of-drug-policy/about/editorial-board/?$"
+            --exclude "^https://data[.]rcsi[.]science/publications/news/147/?$"
+            "https://www.alexeev.pw/"
+            "https://www.alexeev.pw/hope/"
+            "https://www.alexeev.pw/family/"
+            "https://www.alexeev.pw/revalue-au/"
+            "https://www.alexeev.pw/mailbridge/privacy.html"
