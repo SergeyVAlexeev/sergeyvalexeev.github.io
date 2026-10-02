@@ -656,6 +656,58 @@ body.chat-open #chat-fab{
       transform: translateY(-1px);
     }
     details.pub-fold[open] > summary::before{ content: "▾"; }
+
+    /* ReplyPort notice: quiet, thin, fixed bar near top */
+    #replyport-bar{
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9990;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      min-height: 48px;
+      padding: 12px 52px 12px 24px;
+      background: var(--bg);
+      color: var(--fg);
+      border-bottom: 1px solid var(--rule);
+      box-shadow: 0 2px 10px rgba(0,0,0,.08);
+      font: 14px/1.4 ui-serif, Georgia, "Times New Roman", Times, serif;
+    }
+    #replyport-bar[hidden]{ display: none; }
+    #replyport-bar p{ margin: 0; max-width: 1120px; text-align: center; }
+    #replyport-bar a{ color: inherit; text-decoration: underline; text-decoration-color: var(--muted); text-underline-offset: 3px; }
+    #replyport-bar a:hover{ text-decoration: underline; }
+    #replyport-close{
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      font-family: inherit;
+    }
+    #replyport-close:hover{ color: var(--fg); }
+    #replyport-bar a:focus-visible, #replyport-close:focus-visible{
+      outline: 2px solid var(--muted); outline-offset: 2px;
+    }
+    @media (prefers-reduced-motion: no-preference){
+      #replyport-bar{ transition: opacity .2s ease; }
+    }
+    @media (max-width: 640px){
+      #replyport-bar{ padding: 10px 44px 10px 12px; font-size: 13px; }
+      #replyport-bar p{ text-align: left; }
+    }
 </style>
 </head>
 <body>
@@ -1809,6 +1861,90 @@ across the 20th century.
 })();
 </script>
 
+<div id="replyport-bar" role="note" hidden>
+  <p>
+    While I have you here: juggling multiple Outlook inboxes, or blocked from using AI add-ins at work? I built
+    <a href="https://replyport.github.io/" target="_blank" rel="noopener">ReplyPort</a>.
+    <a href="https://apps.microsoft.com/detail/restricted/9PPGN3H4QGJJ" target="_blank" rel="noopener">Microsoft Store →</a>
+  </p>
+  <button type="button" id="replyport-close" aria-label="Dismiss ReplyPort notice">×</button>
+</div>
+
+<script>
+(function(){
+  var SESSION_KEY = "replyport_notice_shown";
+  var DISMISS_KEY = "replyport_notice_dismissed_at";
+  var DISMISS_MS = 30 * 24 * 60 * 60 * 1000;
+  var REVEAL_MS = 45000;
+  var MIN_SCROLLABLE = 300;
+  var SCROLL_FRACTION = 0.4;
+
+  var bar = document.getElementById("replyport-bar");
+  var closeBtn = document.getElementById("replyport-close");
+  if (!bar || !closeBtn) return;
+
+  var shown = false;
+  var timer = null;
+  var ticking = false;
+
+  function canShow(){
+    try{
+      if (sessionStorage.getItem(SESSION_KEY)) return false;
+    }catch(e){}
+    try{
+      var dismissedAt = localStorage.getItem(DISMISS_KEY);
+      if (dismissedAt && (Date.now() - parseInt(dismissedAt, 10) < DISMISS_MS)) return false;
+    }catch(e){}
+    return true;
+  }
+
+  function cleanup(){
+    if (timer){ clearTimeout(timer); timer = null; }
+    window.removeEventListener("scroll", onScroll);
+  }
+
+  function showBar(){
+    if (shown || !canShow()) { cleanup(); return; }
+    shown = true;
+    bar.hidden = false;
+    try{ sessionStorage.setItem(SESSION_KEY, "1"); }catch(e){}
+    cleanup();
+  }
+
+  function checkScroll(){
+    ticking = false;
+    var scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    if (scrollable < MIN_SCROLLABLE) return;
+    if (window.scrollY >= Math.max(MIN_SCROLLABLE, scrollable * SCROLL_FRACTION)) showBar();
+  }
+
+  function onScroll(){
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(checkScroll);
+  }
+
+  function dismiss(){
+    bar.hidden = true;
+    try{ localStorage.setItem(DISMISS_KEY, String(Date.now())); }catch(e){}
+    cleanup();
+  }
+
+  closeBtn.addEventListener("click", dismiss);
+  window.addEventListener("storage", function(event){
+    if (event.key === DISMISS_KEY && event.newValue &&
+        Date.now() - Number(event.newValue) < DISMISS_MS){
+      bar.hidden = true;
+      cleanup();
+    }
+  });
+
+  if (canShow()){
+    timer = setTimeout(showBar, REVEAL_MS);
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
+})();
+</script>
 
 </body>
 </html>
