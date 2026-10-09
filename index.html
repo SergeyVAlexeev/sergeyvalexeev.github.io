@@ -525,6 +525,12 @@ body.chat-open{
   overflow: hidden;
 }
 
+/* Desktop: keep the page usable while Sergey AI floats alongside it. */
+@media (min-width: 641px){
+  body.chat-open{ overflow: visible; }
+  #chat-scrim{ display: none; }
+}
+
 /* Hide the floating button when chat is open (prevents accidental overlap/taps) */
 body.chat-open #chat-fab{
   display: none;
@@ -1813,8 +1819,12 @@ across the 20th century.
     if (isOpen) {
       // let layout settle then focus
       setTimeout(() => {
-        input.focus();
-        input.scrollIntoView({ block: "nearest" });
+        if (window.matchMedia("(min-width: 641px)").matches) {
+          input.focus({ preventScroll: true });
+        } else {
+          input.focus();
+          input.scrollIntoView({ block: "nearest" });
+        }
       }, 50);
 
       if (!shown) {
