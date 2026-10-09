@@ -89,3 +89,18 @@ value cannot be read, only reused. Live AI tests need the $5 prepaid credit Serg
 - **On hold (Sergey):** Dropbox app shows only `account_info.read`; `files.metadata.read`/`files.content.read` are
   off, so no OAuth yet. The OpenAI key/credit question is unresolved. No production deploy or merge until these are
   resolved and end-to-end tests pass.
+- 2026-10-09: **Production deployed** (Sergey authorised deploy + merge; Dropbox scopes still not approved).
+  Pre-checks: rollback version `391c5f37` exists; production's only trigger is workers.dev (no routes, custom
+  domains or zones); existing secrets kept (`OPENAI_API_KEY` reused). New version **`e6cec90a-34ba-456c-bdf3-49158fc067cd`**.
+  Wrangler turned on Preview URLs (previously off); reverted via the API (`previews_enabled: false`), and
+  `"preview_urls": false` added to `wrangler.jsonc`.
+- 2026-10-09: **Production smoke test passed.** `/health` 200 on `e6cec90a` (ai_configured true,
+  dropbox_configured false). One real chat ("recent paper on interviewers and drug use") → HTTP 200 in 3.8 s with the
+  correct title, co-author, Journal of Population Economics (2026), post-print and film links, all matching the
+  website. Errors are generic: foreign origin 403, malformed body 400, `/diag` 404 (no DIAG_TOKEN on production), OAuth
+  endpoints 404. No load tests on production. Existing prepaid credit used; nothing purchased or changed in billing.
+- **Still blocked:** Dropbox profile reading and auto-refresh. The app has only `account_info.read`, so production
+  answers from the live website only and its prompt tells the model the profile is unavailable. To enable later: step 6
+  of this runbook (scopes + redirect URI + `DROPBOX_APP_KEY` on staging, then `scripts/dropbox-auth.mjs --production`).
+  No redeploy needed: the Worker picks the profile up once the secrets exist.
+

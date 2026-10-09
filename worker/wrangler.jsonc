@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "compatibility_date": "2026-09-01",
   "workers_dev": true,
+  "preview_urls": false,
 
   // Bundle the system prompt as a text module.
   "rules": [{ "type": "Text", "globs": ["**/*.md"], "fallthrough": true }],
