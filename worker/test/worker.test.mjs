@@ -470,7 +470,8 @@ test("A: a marker line at the very top of PROFILE.md reaches the model, and the 
   const prompt = lastSystemPrompt(world);
   const profileBlock = prompt.slice(prompt.indexOf("<profile"), prompt.indexOf("</profile>"));
   assert.match(profileBlock, /^<profile[^>]*>\nTEMP-MARKER-7f3a: refresh check\n/);
-  assert.match(prompt, /You may quote or report what the reference data says/);
+  assert.match(prompt, /you may report relevant, non-sensitive facts/);
+  assert.match(prompt, /Never share referee details, private contact details, credentials, or sensitive personal information/);
   assert.doesNotMatch(prompt, /beyond the professional facts/);
   assert.doesNotMatch(profileBlock, /Referee One/);
 });
