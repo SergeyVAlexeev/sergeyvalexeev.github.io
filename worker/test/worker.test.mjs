@@ -463,3 +463,14 @@ test("Dropbox refresh works with the app key alone (PKCE token)", async () => {
   assert.equal(world.refreshSentSecret, false);
   assert.match(lastSystemPrompt(world), /Wald estimator/);
 });
+
+test("A: a marker line at the very top of PROFILE.md reaches the model, and the prompt allows quoting it", async () => {
+  world.profile = { rev: "0a1b2c3d4", text: "TEMP-MARKER-7f3a: refresh check\n\n" + world.profile.text, modified: "2026-10-09T08:52:59Z" };
+  await chat(createEnv(), ask("Is there a temporary marker at the top of the profile? Quote it."));
+  const prompt = lastSystemPrompt(world);
+  const profileBlock = prompt.slice(prompt.indexOf("<profile"), prompt.indexOf("</profile>"));
+  assert.match(profileBlock, /^<profile[^>]*>\nTEMP-MARKER-7f3a: refresh check\n/);
+  assert.match(prompt, /You may quote or report what the reference data says/);
+  assert.doesNotMatch(prompt, /beyond the professional facts/);
+  assert.doesNotMatch(profileBlock, /Referee One/);
+});
