@@ -584,6 +584,11 @@ body.chat-open #chat-fab{
 }
 
 .chat-msg.user{ background: rgba(255,255,255,0.06); }
+.chat-msg{ overflow-wrap: anywhere; }
+.chat-msg a{ color: #7ab7ff; }
+/* Service notices (errors) look different from AI answers */
+.chat-msg.notice{ border-color: rgba(255,190,90,.45); color: #ffd9a0; }
+#chat-send:disabled{ opacity: .6; cursor: default; }
 
 #chat-form{
   display:flex;
@@ -1766,12 +1771,12 @@ across the 20th century.
   <div id="chat-log" role="log" aria-live="polite"></div>
 
   <form id="chat-form" autocomplete="off">
-    <input id="chat-input" type="text" placeholder="Paste a role or project brief..." />
+    <input id="chat-input" type="text" placeholder="Ask a question or paste a brief..." aria-label="Message to Sergey AI" />
     <button id="chat-send" type="submit">Send</button>
   </form>
 
   <div class="chat-foot">
-    Based on Sergey's CV and cover letters. If something’s missing, contact him.
+    Based on Sergey's current profile and this website. AI answers can be wrong; if something’s missing, contact him.
   </div>
 </div>
 
@@ -1786,8 +1791,17 @@ across the 20th century.
   const log = document.getElementById("chat-log");
   const form = document.getElementById("chat-form");
   const input = document.getElementById("chat-input");
+  const sendBtn = document.getElementById("chat-send");
 
+  const TIMEOUT_MS = 45000;       // backend gives up on the AI after 30 s
+  const MAX_CHARS = 8000;         // matches the backend limit
+  const MAX_HISTORY = 12;         // messages sent per request
+
+  // Conversation sent to the backend: successful user/assistant turns only.
+  // The greeting and error notices are display-only.
   const messages = [];
+  let shown = false;
+  let busy = false;
 
   function setOpen(isOpen){
     panel.hidden = !isOpen;
@@ -1803,22 +1817,45 @@ across the 20th century.
         input.scrollIntoView({ block: "nearest" });
       }, 50);
 
-      if (!messages.length) {
-        add("assistant",
-          "Paste a role or project brief. I’ll answer whether Sergey has done similar work and what he’d likely do.");
+      if (!shown) {
+        shown = true;
+        show("assistant",
+          "Ask about Sergey’s research, publications, methods or projects, or paste a role or project brief and I’ll say how his experience fits.");
       }
     }
   }
 
-  function add(role, text) {
-    messages.push({ role, content: text });
+  // Render text safely, turning http(s) URLs and [label](url) into links.
+  function render(div, text) {
+    const re = /\[([^\]\n]{1,200})\]\((https?:\/\/[^\s)]+)\)|(https?:\/\/[^\s<>"]+[^\s<>".,;:!?)\]'])/g;
+    let last = 0, m;
+    while ((m = re.exec(text))) {
+      div.appendChild(document.createTextNode(text.slice(last, m.index)));
+      const a = document.createElement("a");
+      a.href = m[2] || m[3];
+      a.textContent = m[1] || m[3];
+      a.target = "_blank";
+      a.rel = "noopener";
+      div.appendChild(a);
+      last = re.lastIndex;
+    }
+    div.appendChild(document.createTextNode(text.slice(last)));
+  }
 
+  function show(kind, text) {
     const div = document.createElement("div");
-    div.className = "chat-msg " + role;
-    div.textContent = text;
-
+    div.className = "chat-msg " + kind;
+    if (kind === "notice") div.setAttribute("role", "status");
+    render(div, text);
     log.appendChild(div);
     log.scrollTop = log.scrollHeight;
+    return div;
+  }
+
+  function setBusy(on) {
+    busy = on;
+    sendBtn.disabled = on;
+    log.setAttribute("aria-busy", String(on));
   }
 
   fab?.addEventListener("click", (e) => {
@@ -1840,32 +1877,68 @@ across the 20th century.
 
   form?.addEventListener("submit", async (e) => {
     e.preventDefault();
+    if (busy) return;
     const text = input.value.trim();
     if (!text) return;
 
-    add("user", text);
-    input.value = "";
+    if (text.length > MAX_CHARS) {
+      show("notice", "Your message is " + text.length.toLocaleString() + " characters; the limit is " +
+        MAX_CHARS.toLocaleString() + ". Please shorten it, for example by pasting only the key parts of the brief.");
+      return;
+    }
 
-    const placeholder = document.createElement("div");
-    placeholder.className = "chat-msg assistant";
-    placeholder.textContent = "…";
-    log.appendChild(placeholder);
-    log.scrollTop = log.scrollHeight;
+    show("user", text);
+    input.value = "";
+    messages.push({ role: "user", content: text });
+    setBusy(true);
+
+    const placeholder = show("assistant", "…");
+    placeholder.setAttribute("aria-label", "Sergey AI is answering");
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+    let answer = null;
+    let notice = null;
 
     try {
       const r = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages }),
+        body: JSON.stringify({ messages: messages.slice(-MAX_HISTORY) }),
+        signal: controller.signal,
       });
+      let data = null;
+      try { data = await r.json(); } catch {}
 
-      const data = await r.json();
-      placeholder.remove();
-      add("assistant", data.text || "(no response)");
-    } catch {
-      placeholder.remove();
-      add("assistant", "Error talking to server. Try again.");
+      if (r.ok && data && typeof data.text === "string" && data.text.trim()) {
+        answer = data.text;
+      } else if (data && data.error && data.error.message) {
+        notice = data.error.message;
+      } else if (r.status === 429) {
+        notice = "Sergey AI is receiving too many requests. Please wait a minute and try again.";
+      } else {
+        notice = "Sergey AI is temporarily unavailable. Please try again later.";
+      }
+    } catch (err) {
+      notice = err && err.name === "AbortError"
+        ? "Sergey AI took too long to respond. Please try again."
+        : "Couldn’t reach Sergey AI. Check your connection and try again.";
+    } finally {
+      clearTimeout(timer);
     }
+
+    placeholder.remove();
+    if (answer !== null) {
+      messages.push({ role: "assistant", content: answer });
+      show("assistant", answer);
+    } else {
+      // Keep the failed question out of the history and offer it for resending.
+      messages.pop();
+      show("notice", notice);
+      if (!input.value) input.value = text;
+    }
+    setBusy(false);
+    input.focus();
   });
 })();
 </script>
