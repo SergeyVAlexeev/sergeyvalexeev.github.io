@@ -1,0 +1,54 @@
+{
+  // Deploys over the existing Worker of the same name. See README.md.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "alexeev-website-chat",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-01",
+  "workers_dev": true,
+
+  // Bundle the system prompt as a text module.
+  "rules": [{ "type": "Text", "globs": ["**/*.md"], "fallthrough": true }],
+
+  // Non-secret settings. Defaults live in src/config.js; anything set here or
+  // in the dashboard overrides them. Secrets are set with `wrangler secret put`.
+  "vars": {
+    "OPENAI_MODEL": "gpt-6-luna",
+    "OPENAI_REASONING_EFFORT": "low"
+  },
+
+  // Last-good profile/website snapshots and the daily usage counter.
+  // Create once with: npx wrangler kv namespace create CACHE
+  // and paste the returned id here.
+  "kv_namespaces": [{ "binding": "CACHE", "id": "REPLACE_WITH_KV_NAMESPACE_ID" }],
+
+  // Per-location rate limits (period must be 10 or 60 seconds).
+  "ratelimits": [
+    { "name": "RL_IP", "namespace_id": "7301", "simple": { "limit": 6, "period": 60 } },
+    { "name": "RL_GLOBAL", "namespace_id": "7302", "simple": { "limit": 30, "period": 60 } }
+  ],
+
+  "version_metadata": { "binding": "CF_VERSION_METADATA" },
+
+  // Workers Logs (free tier) so `console.log` lines are searchable in the dashboard.
+  "observability": { "enabled": true },
+
+  // Separate test Worker: npx wrangler deploy --env staging
+  // -> https://alexeev-website-chat-staging.<subdomain>.workers.dev
+  // Bindings and vars are not inherited, so they are repeated here. No KV:
+  // staging runs with in-memory caching only.
+  "env": {
+    "staging": {
+      "name": "alexeev-website-chat-staging",
+      "vars": {
+        "OPENAI_MODEL": "gpt-6-luna",
+        "OPENAI_REASONING_EFFORT": "low",
+        "ALLOWED_ORIGINS": "https://www.alexeev.pw,https://alexeev.pw,http://localhost:8000"
+      },
+      "ratelimits": [
+        { "name": "RL_IP", "namespace_id": "7311", "simple": { "limit": 6, "period": 60 } },
+        { "name": "RL_GLOBAL", "namespace_id": "7312", "simple": { "limit": 30, "period": 60 } }
+      ],
+      "version_metadata": { "binding": "CF_VERSION_METADATA" }
+    }
+  }
+}

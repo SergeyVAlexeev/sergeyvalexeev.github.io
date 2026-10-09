@@ -1,0 +1,7 @@
+# Copy to .dev.vars for `npm run dev`. Never commit .dev.vars.
+OPENAI_API_KEY=
+DROPBOX_APP_KEY=
+DROPBOX_APP_SECRET=
+DROPBOX_REFRESH_TOKEN=
+DIAG_TOKEN=
+ALLOWED_ORIGINS=http://localhost:8000,https://www.alexeev.pw
