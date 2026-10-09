@@ -16,8 +16,9 @@ OpenAI credit or enable auto-recharge. Never print or commit credentials, and ne
   Node scripts that call the API directly need `NODE_USE_ENV_PROXY=1`. Approved scope: Workers Scripts Edit +
   Workers KV Storage Edit. Do not broaden it.
 - Dropbox (PKCE, no app secret anywhere): Sergey adds the app key as secret `DROPBOX_APP_KEY` on the staging
-  Worker in the Cloudflare dashboard. The Dropbox app needs **Full Dropbox** access, scopes `files.metadata.read` and
-  `files.content.read` enabled and submitted, and redirect URI
+  Worker in the Cloudflare dashboard (type Secret). The Dropbox app needs **Full Dropbox** access, scopes
+  `files.metadata.read` and `files.content.read` enabled and submitted, OAuth 2 →
+  **"Allow public clients (Implicit Grant & PKCE)" set to Allow**, and redirect URI
   `https://alexeev-website-chat-staging.sergei-v-alexeev.workers.dev/oauth/dropbox`.
 
 OpenAI: reuse the API key secret already on the production Worker (project `website-chat`). Its
@@ -35,10 +36,12 @@ value cannot be read, only reused. Live AI tests need the $5 prepaid credit Serg
 4. **KV.** `npx wrangler kv namespace create CACHE` and `npx wrangler kv namespace create CACHE --env staging`;
    put both ids into `wrangler.jsonc` (ids are not secret) and commit.
 5. **Deploy staging.** `npx wrangler deploy --env staging`.
-6. **Dropbox OAuth.** Run `node scripts/dropbox-auth.mjs --production` in the background. Give Sergey the
-   printed `/oauth/dropbox/start` link (his only action is to click Allow) and wait for it to finish. Note that adding secrets to production
-   redeploys the *old* production code with extra secrets, which changes nothing visible. Confirm that
-   `DROPBOX_OAUTH_STATE` is gone from staging (`npx wrangler secret list --env staging`).
+6. **Dropbox OAuth.** Run `node scripts/dropbox-auth.mjs --production` in the background. It fails fast if
+   `DROPBOX_APP_KEY` is missing on staging and waits (bounded) for the start endpoint to redirect before printing the
+   link. Give Sergey the printed `/oauth/dropbox/start` link (his only action is to click Allow) and wait for it to
+   finish. Each `secret put` creates a new Worker version carrying the code already live (production: the code of
+   `e6cec90a`), so production's version ID changes; behaviour changes only in that the profile becomes available.
+   Confirm that `DROPBOX_OAUTH_STATE` is gone from staging (`npx wrangler secret list --env staging`).
 7. **Diagnostics token.** Generate one (`node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`),
    keep it in the session scratchpad only, and `wrangler secret put DIAG_TOKEN` on staging and production.
 8. **Staging with real data.** `GET /diag` on staging: `profile.status = fresh`, and `revision` equals the rev

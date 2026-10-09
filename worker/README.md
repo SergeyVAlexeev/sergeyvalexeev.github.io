@@ -82,12 +82,18 @@ curl -s -H "Authorization: Bearer $DIAG_TOKEN" https://alexeev-website-chat.serg
 
 Add `--env staging` to target the staging Worker.
 
-- **Dropbox (set up or rotate):** add the app key as secret `DROPBOX_APP_KEY` on the staging Worker
-  (Cloudflare dashboard → Workers → `alexeev-website-chat-staging` → Settings → Variables and Secrets), and register the
-  redirect URI `https://alexeev-website-chat-staging.sergei-v-alexeev.workers.dev/oauth/dropbox` in the Dropbox app.
-  Then run `node scripts/dropbox-auth.mjs --production` and give the person the printed link. They click Allow;
-  the staging Worker does the PKCE exchange, checks the scopes and the profile path, and the script moves the token into
-  secrets on both Workers and disables the endpoint. To revoke: Dropbox → Settings → Connected apps.
+- **Dropbox (set up or rotate):** add the app key as secret `DROPBOX_APP_KEY` (type **Secret**, not Text) on the
+  staging Worker (Cloudflare dashboard → Workers → `alexeev-website-chat-staging` → Settings → Variables and Secrets).
+  In the Dropbox app console (Settings tab): Full Dropbox access; scopes `files.metadata.read` and
+  `files.content.read` enabled and submitted; OAuth 2 → **"Allow public clients (Implicit Grant & PKCE)" set to
+  Allow** (the flow uses PKCE and fails otherwise); redirect URI
+  `https://alexeev-website-chat-staging.sergei-v-alexeev.workers.dev/oauth/dropbox`.
+  Then run `node scripts/dropbox-auth.mjs --production`. It stops at once if `DROPBOX_APP_KEY` is missing on staging,
+  waits (up to 2 minutes) until the staging `/oauth/dropbox/start` endpoint redirects to Dropbox, and only then prints
+  the consent link. The person clicks Allow; the staging Worker does the PKCE exchange, checks the scopes and the
+  profile path, and the script moves the token into secrets on both Workers and disables the endpoint. Each
+  `secret put` creates a new Worker version carrying the code already live, so the version ID changes but behaviour
+  only changes in that the profile becomes available. To revoke: Dropbox → Settings → Connected apps.
 - **OpenAI:** create a key in the `website-chat` project, then run `npx wrangler secret put OPENAI_API_KEY`
   and paste the key at the prompt. Delete the old key in OpenAI once the new one is confirmed working.
 - **Diagnostics token:** `npx wrangler secret put DIAG_TOKEN` (generate one with
