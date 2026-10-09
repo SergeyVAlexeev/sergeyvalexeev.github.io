@@ -1,0 +1,17 @@
+{
+  "compatibility_date": "2026-02-28",
+  "bindings": [
+    {
+      "type": "secret_text",
+      "name": "ALLOWED_ORIGIN"
+    },
+    {
+      "type": "secret_text",
+      "name": "OPENAI_API_KEY"
+    },
+    {
+      "type": "secret_text",
+      "name": "VECTOR_STORE_ID"
+    }
+  ]
+}

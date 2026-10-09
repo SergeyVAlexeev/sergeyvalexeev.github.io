@@ -9,17 +9,16 @@ Cloudflare, merge the branch `claude/exciting-hypatia-w84i84` into `main` and pu
 pass, without asking again. Do not change unrelated parts of the website or the CV link. Never purchase
 OpenAI credit or enable auto-recharge. Never print or commit credentials, and never ask Sergey to paste one into chat.
 
-## Required environment variables (set by Sergey in the cloud environment settings)
+## Credentials
 
-| Variable | Source |
-|---|---|
-| `CLOUDFLARE_API_TOKEN` | Cloudflare custom token: Account › Workers Scripts › Edit; Account › Workers KV Storage › Edit; Account › Account Settings › Read; User › Memberships › Read; User › User Details › Read |
-| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare dashboard, Workers & Pages overview (right sidebar) |
-| `DROPBOX_APP_KEY`, `DROPBOX_APP_SECRET` | Dropbox app console › `Sergey-AI-Website` › Settings |
-
-Dropbox app settings that Sergey must have made: permission type **Full Dropbox**; scopes
-`files.metadata.read` and `files.content.read` (submitted); redirect URI
-`https://alexeev-website-chat-staging.sergei-v-alexeev.workers.dev/oauth/dropbox`.
+- Cloudflare: the API token is a Claude **network secret** for `api.cloudflare.com` (Bearer); the environment holds
+  only `CLOUDFLARE_API_TOKEN=network-secret-proxy` and `CLOUDFLARE_ACCOUNT_ID`. Wrangler works through the proxy;
+  Node scripts that call the API directly need `NODE_USE_ENV_PROXY=1`. Approved scope: Workers Scripts Edit +
+  Workers KV Storage Edit. Do not broaden it.
+- Dropbox (PKCE, no app secret anywhere): Sergey adds the app key as secret `DROPBOX_APP_KEY` on the staging
+  Worker in the Cloudflare dashboard. The Dropbox app needs **Full Dropbox** access, scopes `files.metadata.read` and
+  `files.content.read` enabled and submitted, and redirect URI
+  `https://alexeev-website-chat-staging.sergei-v-alexeev.workers.dev/oauth/dropbox`.
 
 OpenAI: reuse the API key secret already on the production Worker (project `website-chat`). Its
 value cannot be read, only reused. Live AI tests need the $5 prepaid credit Sergey is adding.
@@ -37,7 +36,7 @@ value cannot be read, only reused. Live AI tests need the $5 prepaid credit Serg
    put both ids into `wrangler.jsonc` (ids are not secret) and commit.
 5. **Deploy staging.** `npx wrangler deploy --env staging`.
 6. **Dropbox OAuth.** Run `node scripts/dropbox-auth.mjs --production` in the background. Give Sergey the
-   printed link (his only action is to click Allow) and wait for it to finish. Note that adding secrets to production
+   printed `/oauth/dropbox/start` link (his only action is to click Allow) and wait for it to finish. Note that adding secrets to production
    redeploys the *old* production code with extra secrets, which changes nothing visible. Confirm that
    `DROPBOX_OAUTH_STATE` is gone from staging (`npx wrangler secret list --env staging`).
 7. **Diagnostics token.** Generate one (`node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`),
@@ -65,4 +64,21 @@ value cannot be read, only reused. Live AI tests need the $5 prepaid credit Serg
 
 ## Log
 
-- 2026-10-09: Code complete on the branch (35 tests). Waiting for environment variables, Dropbox redirect URI and OpenAI credit.
+- 2026-10-09: Code complete on the branch.
+- 2026-10-09: Cloudflare token verified (tokens/verify 200, active); `wrangler whoami` OK (account a87d4b1c…).
+- 2026-10-09: **Production backup** in `legacy/` (old code, binding names: ALLOWED_ORIGIN, OPENAI_API_KEY,
+  VECTOR_STORE_ID). Production untouched. **Rollback target: version `391c5f37-4c08-4cef-97fc-03300b2c09b9`**
+  (`npx wrangler rollback 391c5f37-4c08-4cef-97fc-03300b2c09b9`). The existing secret is named `OPENAI_API_KEY`, so
+  the new code reuses it without changes.
+- 2026-10-09: KV namespaces created: production `fbad1c79…`, staging `d08d9aaa…` (ids in `wrangler.jsonc`).
+- 2026-10-09: Staging deployed. Checks passed: /health; /diag token-gated (404 without or with a wrong token); OAuth
+  endpoints 404 while disabled; CORS only for alexeev.pw; foreign origin 403; 8,001-char message 413; all 6 live website
+  pages extracted on Cloudflare; chat returns `ai_not_configured` (staging has no OpenAI key) after loading context.
+- 2026-10-09: Rate limits on staging. Binding version (`952c8c0d`, fully propagated): 40 sequential requests from one
+  colo (IAD), **0 throttled**; the global key does not depend on client IP. A paused Durable Object experiment
+  (`fd569692`, staging only, created before Sergey's stop note, free plan, no token change): 40 sequential requests,
+  **30 admitted then 10 × 429**, exact. Its namespace stays on staging, dormant, until Sergey decides (delete with a
+  `deleted_classes` migration, or adopt). Staging now runs `952c8c0d` (binding + in-memory backstop).
+- **On hold (Sergey):** Dropbox app shows only `account_info.read`; `files.metadata.read`/`files.content.read` are
+  off, so no OAuth yet. OpenAI credit and approval of live AI tests pending. No production deploy or merge until
+  these are resolved and end-to-end tests pass. Sergey will test the staging per-IP binding from a fixed IP.

@@ -4,6 +4,7 @@
 // Secret VALUES are never returned by Cloudflare; only their names are saved.
 //
 //   CLOUDFLARE_API_TOKEN=... CLOUDFLARE_ACCOUNT_ID=... node scripts/backup-live-worker.mjs [worker-name]
+//   (behind an HTTPS proxy, prefix with NODE_USE_ENV_PROXY=1)
 //
 // The token needs "Workers Scripts: Read". Without a token, copy the code
 // from the dashboard instead: Workers & Pages -> alexeev-website-chat -> Edit code.

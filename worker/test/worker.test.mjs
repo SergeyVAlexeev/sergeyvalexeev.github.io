@@ -272,13 +272,32 @@ test("F: output tokens, model and reasoning effort are set from config", async (
   assert.equal(body.store, false);
 });
 
-test("F: rapid repeated requests from one IP are rate limited", async () => {
-  const env = createEnv({ RL_IP: createRateLimiter(6), RL_GLOBAL: createRateLimiter(30) });
+test("F: rapid repeated requests from one IP are rate limited (binding)", async () => {
+  const env = createEnv({ RL_IP: createRateLimiter(6), RL_GLOBAL: createRateLimiter(1000) });
   const statuses = [];
   for (let i = 0; i < 8; i++) statuses.push((await chat(env, ask(`q${i}`))).status);
   assert.deepEqual(statuses, [200, 200, 200, 200, 200, 200, 429, 429]);
   const other = await chat(env, ask("different visitor"), { ip: "192.0.2.55" });
   assert.equal(other.status, 200);
+});
+
+test("F: in-memory limiter still throttles when the binding lets everything through", async () => {
+  const permissive = { limit: async () => ({ success: true }) };
+  const env = createEnv({ RL_IP: permissive, RL_GLOBAL: permissive });
+  const statuses = [];
+  for (let i = 0; i < 8; i++) statuses.push((await chat(env, ask(`q${i}`))).status);
+  assert.deepEqual(statuses, [200, 200, 200, 200, 200, 200, 429, 429]);
+  resetAll();
+  const many = [];
+  for (let i = 0; i < 35; i++) many.push((await chat(env, ask("x"), { ip: `10.0.0.${i}` })).status);
+  assert.equal(many.filter((s) => s === 200).length, 30);
+  assert.equal(many.filter((s) => s === 429).length, 5);
+});
+
+test("F: invalid requests do not use up the rate limit", async () => {
+  const env = createEnv();
+  for (let i = 0; i < 10; i++) await chat(env, null, { rawBody: "junk" });
+  assert.equal((await chat(env, ask("real question"))).status, 200);
 });
 
 test("F: daily limit stops spending", async () => {
@@ -380,32 +399,67 @@ test("CORS: preflight allowed only for listed origins", async () => {
   assert.equal((await pre("https://evil.example")).headers.get("Access-Control-Allow-Origin"), null);
 });
 
-// ---------- One-time Dropbox OAuth callback ----------
+// ---------- One-time Dropbox OAuth (PKCE) ----------
 
-test("OAuth: callback is disabled unless DROPBOX_OAUTH_STATE is set, and checks state", async () => {
+test("OAuth: endpoints are disabled unless DROPBOX_OAUTH_STATE is set, and check state", async () => {
+  assert.equal((await get(createEnv(), "/oauth/dropbox/start?state=x")).status, 404);
   assert.equal((await get(createEnv(), "/oauth/dropbox?code=good-code&state=x")).status, 404);
   const env = createEnv({ DROPBOX_OAUTH_STATE: "s3cret-state" });
+  assert.equal((await get(env, "/oauth/dropbox/start?state=wrong")).status, 404);
   assert.equal((await get(env, "/oauth/dropbox?code=good-code&state=wrong")).status, 404);
   assert.equal(world.calls.token, 0);
 });
 
-test("OAuth: valid redirect exchanges the code, verifies the profile path and parks the token in KV", async () => {
-  const env = createEnv({ DROPBOX_OAUTH_STATE: "s3cret-state" });
-  const r = await get(env, "/oauth/dropbox?code=good-code&state=s3cret-state");
+async function authorise(env, state) {
+  const start = await get(env, `/oauth/dropbox/start?state=${state}`);
+  assert.equal(start.status, 302);
+  const loc = new URL(start.location);
+  assert.equal(loc.origin + loc.pathname, "https://www.dropbox.com/oauth2/authorize");
+  assert.equal(loc.searchParams.get("client_id"), SECRETS.DROPBOX_APP_KEY);
+  assert.equal(loc.searchParams.get("token_access_type"), "offline");
+  assert.equal(loc.searchParams.get("code_challenge_method"), "S256");
+  assert.ok(loc.searchParams.get("code_challenge").length >= 43);
+  assert.equal(loc.searchParams.get("redirect_uri"), "https://worker.example/oauth/dropbox");
+  return get(env, `/oauth/dropbox?code=good-code&state=${state}`);
+}
+
+test("OAuth: PKCE flow exchanges the code without the app secret and parks the token in KV", async () => {
+  const env = createEnv({ DROPBOX_OAUTH_STATE: "s3cret-state", DROPBOX_APP_SECRET: "" });
+  const r = await authorise(env, "s3cret-state");
   assert.equal(r.status, 200);
-  assert.match(r.text, /connected to Dropbox and can read PROFILE\.md|can read/);
+  assert.match(r.text, /can read \/Job hunting\/PROFILE\.md/);
   assert.equal(world.redirectUriUsed, "https://worker.example/oauth/dropbox");
-  assert.equal(env.CACHE.store.get("oauth:dropbox_refresh_token"), "dbx-new-refresh-token-TEST-SECRET");
+  const parked = JSON.parse(env.CACHE.store.get("oauth:dropbox"));
+  assert.equal(parked.refresh_token, "dbx-new-refresh-token-TEST-SECRET");
+  assert.equal(parked.app_key, SECRETS.DROPBOX_APP_KEY);
+  assert.equal(env.CACHE.store.has("oauth:pkce_verifier"), false);
   assert.doesNotMatch(r.text, /dbx-new-refresh-token/);
+});
+
+test("OAuth: an app without the file read scopes is reported clearly and nothing is stored", async () => {
+  world.scopes = "account_info.read";
+  const env = createEnv({ DROPBOX_OAUTH_STATE: "st" });
+  const r = await authorise(env, "st");
+  assert.equal(r.status, 400);
+  assert.match(r.text, /lacks files\.metadata\.read and files\.content\.read/);
+  assert.equal(env.CACHE.store.has("oauth:dropbox"), false);
 });
 
 test("OAuth: bad code and App-folder apps get clear messages", async () => {
   const env = createEnv({ DROPBOX_OAUTH_STATE: "st", DROPBOX_PROFILE_PATH: "/elsewhere/PROFILE.md" });
+  await get(env, "/oauth/dropbox/start?state=st");
   let r = await get(env, "/oauth/dropbox?code=bad&state=st");
   assert.equal(r.status, 400);
   assert.match(r.text, /rejected/);
-  r = await get(env, "/oauth/dropbox?code=good-code&state=st");
+  r = await authorise(env, "st");
   assert.equal(r.status, 400);
   assert.match(r.text, /Full Dropbox/);
-  assert.equal(env.CACHE.store.get("oauth:dropbox_refresh_token"), undefined);
+  assert.equal(env.CACHE.store.has("oauth:dropbox"), false);
+});
+
+test("Dropbox refresh works with the app key alone (PKCE token)", async () => {
+  const r = await chat(createEnv({ DROPBOX_APP_SECRET: "" }), ask("hi"));
+  assert.equal(r.status, 200);
+  assert.equal(world.refreshSentSecret, false);
+  assert.match(lastSystemPrompt(world), /Wald estimator/);
 });

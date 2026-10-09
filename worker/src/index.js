@@ -4,15 +4,19 @@
 //                 -> 200 { text } or 4xx/5xx { error: { code, message } }
 //   GET  /health  public, cheap, no outbound calls
 //   GET  /diag    live checks; requires "Authorization: Bearer <DIAG_TOKEN>"
-//   GET  /oauth/dropbox  one-time Dropbox OAuth redirect target; 404 unless
-//                 the DROPBOX_OAUTH_STATE secret is set (scripts/dropbox-auth.mjs)
+//   GET  /oauth/dropbox/start, /oauth/dropbox  one-time Dropbox PKCE
+//                 authorisation; 404 unless the DROPBOX_OAUTH_STATE secret is
+//                 set and matches (scripts/dropbox-auth.mjs)
 
 import { getConfig } from "./config.js";
 import { ChatError, checkModelAccess, complete } from "./llm.js";
 import { ERROR_MESSAGES, handleChat } from "./chat.js";
-import { dropboxConfigured, getProfile, handleDropboxCallback, profileState } from "./profile.js";
+import { dropboxConfigured, getProfile, handleDropboxCallback, handleDropboxStart, profileState } from "./profile.js";
 import { getWebsite, websiteState } from "./website.js";
 import { getUsage, log, safeEqual } from "./store.js";
+
+// Dormant class export; see the note in src/ratelimit.js.
+export { Limiter } from "./ratelimit.js";
 
 function corsHeaders(origin, cfg) {
   const h = { Vary: "Origin" };
@@ -159,6 +163,10 @@ export default {
         return json(health(env, cfg), 200, cors);
       }
 
+      if (request.method === "GET" && path === "/oauth/dropbox/start") {
+        return (await handleDropboxStart(url, env)) || errorResponse("not_found", 404, cors);
+      }
+
       if (request.method === "GET" && path === "/oauth/dropbox") {
         const result = await handleDropboxCallback(url, env);
         if (!result) return errorResponse("not_found", 404, cors);
@@ -170,10 +178,6 @@ export default {
 
       if (request.method === "GET" && path === "/diag") {
         if (!env.DIAG_TOKEN) return errorResponse("not_found", 404, cors);
-        if (env.RL_IP) {
-          const ip = request.headers.get("CF-Connecting-IP") || "unknown";
-          if (!(await env.RL_IP.limit({ key: `diag:${ip}` })).success) return errorResponse("rate_limited", 429, cors);
-        }
         const auth = request.headers.get("Authorization") || "";
         if (!safeEqual(auth, `Bearer ${env.DIAG_TOKEN}`)) return errorResponse("not_found", 404, cors);
         return json(await diag(request, env, ctx, cfg), 200);

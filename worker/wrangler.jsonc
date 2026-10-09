@@ -17,9 +17,8 @@
   },
 
   // Last-good profile/website snapshots and the daily usage counter.
-  // Create once with: npx wrangler kv namespace create CACHE
-  // and paste the returned id here.
-  "kv_namespaces": [{ "binding": "CACHE", "id": "REPLACE_WITH_KV_NAMESPACE_ID" }],
+  // Created 2026-10-09 with: npx wrangler kv namespace create CACHE [--env staging]
+  "kv_namespaces": [{ "binding": "CACHE", "id": "fbad1c79410a4c109b2336f8b35c313d" }],
 
   // Per-location rate limits (period must be 10 or 60 seconds).
   "ratelimits": [
@@ -39,7 +38,7 @@
   "env": {
     "staging": {
       "name": "alexeev-website-chat-staging",
-      "kv_namespaces": [{ "binding": "CACHE", "id": "REPLACE_WITH_STAGING_KV_NAMESPACE_ID" }],
+      "kv_namespaces": [{ "binding": "CACHE", "id": "d08d9aaab76e466880e762ff499ffd92" }],
       "vars": {
         "OPENAI_MODEL": "gpt-6-luna",
         "OPENAI_REASONING_EFFORT": "low",
@@ -49,6 +48,10 @@
         { "name": "RL_IP", "namespace_id": "7311", "simple": { "limit": 6, "period": 60 } },
         { "name": "RL_GLOBAL", "namespace_id": "7312", "simple": { "limit": 30, "period": 60 } }
       ],
+      // A paused experiment created this Durable Object class on staging only.
+      // It stays declared (unbound, unused) until its namespace is deleted with
+      // a { "tag": "v2", "deleted_classes": ["Limiter"] } migration.
+      "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Limiter"] }],
       "version_metadata": { "binding": "CF_VERSION_METADATA" }
     }
   }

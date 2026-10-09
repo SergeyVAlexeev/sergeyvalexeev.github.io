@@ -34,8 +34,10 @@ export function profileState() {
   return state;
 }
 
+// The refresh token comes from the PKCE flow, so it renews with the app key
+// alone. DROPBOX_APP_SECRET is optional (only for tokens from a secret flow).
 export function dropboxConfigured(env) {
-  return Boolean(env.DROPBOX_APP_KEY && env.DROPBOX_APP_SECRET && env.DROPBOX_REFRESH_TOKEN);
+  return Boolean(env.DROPBOX_APP_KEY && env.DROPBOX_REFRESH_TOKEN);
 }
 
 class DropboxError extends Error {
@@ -53,8 +55,8 @@ async function getAccessToken(env, cfg, force = false) {
     grant_type: "refresh_token",
     refresh_token: env.DROPBOX_REFRESH_TOKEN,
     client_id: env.DROPBOX_APP_KEY,
-    client_secret: env.DROPBOX_APP_SECRET,
   });
+  if (env.DROPBOX_APP_SECRET) body.set("client_secret", env.DROPBOX_APP_SECRET);
   const res = await fetch(TOKEN_URL, {
     method: "POST",
     body,
@@ -204,39 +206,83 @@ export async function getProfile(env, cfg, ctx) {
   }
 }
 
-// ---------- One-time OAuth redirect target ----------
-// Active only while the DROPBOX_OAUTH_STATE secret is set. Dropbox redirects
-// the browser here after "Allow"; the Worker exchanges the code itself, so the
-// code never has to be copied anywhere. The refresh token is parked in KV for
-// at most an hour until scripts/dropbox-auth.mjs moves it into a secret.
-export const OAUTH_KV_KEY = "oauth:dropbox_refresh_token";
+// ---------- One-time OAuth (PKCE) ----------
+// Active only while the DROPBOX_OAUTH_STATE secret is set on the Worker.
+//   GET /oauth/dropbox/start?state=S  -> redirects to Dropbox's consent page
+//   GET /oauth/dropbox?code&state     -> Dropbox redirects back here
+// The Worker exchanges the code itself (PKCE, no app secret), checks that the
+// token can read the profile, and parks { app_key, refresh_token } in KV for
+// at most an hour until scripts/dropbox-auth.mjs moves them into secrets.
+export const OAUTH_KV_KEY = "oauth:dropbox";
+const VERIFIER_KV_KEY = "oauth:pkce_verifier";
+const REQUIRED_SCOPES = ["files.metadata.read", "files.content.read"];
+
+function base64url(bytes) {
+  return btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function oauthEnabled(env, url) {
+  return Boolean(
+    env.DROPBOX_OAUTH_STATE && env.CACHE && env.DROPBOX_APP_KEY &&
+      safeEqual(url.searchParams.get("state") || "", env.DROPBOX_OAUTH_STATE),
+  );
+}
+
+function redirectUri(url) {
+  return `${url.origin}/oauth/dropbox`;
+}
+
+export async function handleDropboxStart(url, env) {
+  if (!oauthEnabled(env, url)) return null;
+  const verifier = base64url(crypto.getRandomValues(new Uint8Array(48)));
+  const challenge = base64url(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier)));
+  await env.CACHE.put(VERIFIER_KV_KEY, verifier, { expirationTtl: 1800 });
+  const authorize = new URL("https://www.dropbox.com/oauth2/authorize");
+  authorize.search = new URLSearchParams({
+    client_id: env.DROPBOX_APP_KEY,
+    response_type: "code",
+    token_access_type: "offline",
+    redirect_uri: redirectUri(url),
+    state: env.DROPBOX_OAUTH_STATE,
+    code_challenge: challenge,
+    code_challenge_method: "S256",
+  }).toString();
+  return Response.redirect(authorize.toString(), 302);
+}
 
 export async function handleDropboxCallback(url, env) {
-  const expected = env.DROPBOX_OAUTH_STATE;
-  if (!expected || !env.CACHE || !env.DROPBOX_APP_KEY || !env.DROPBOX_APP_SECRET) return null;
-  if (!safeEqual(url.searchParams.get("state") || "", expected)) return null;
+  if (!oauthEnabled(env, url)) return null;
 
   if (url.searchParams.get("error")) {
     return { ok: false, message: "Dropbox authorisation was cancelled. Open the authorisation link again to retry." };
   }
   const code = url.searchParams.get("code");
-  if (!code) return { ok: false, message: "No authorisation code received from Dropbox." };
+  const verifier = await env.CACHE.get(VERIFIER_KV_KEY);
+  if (!code || !verifier) return { ok: false, message: "Authorisation expired or incomplete. Open the authorisation link again." };
 
-  const res = await fetch(TOKEN_URL, {
-    method: "POST",
-    body: new URLSearchParams({
-      grant_type: "authorization_code",
-      code,
-      client_id: env.DROPBOX_APP_KEY,
-      client_secret: env.DROPBOX_APP_SECRET,
-      redirect_uri: `${url.origin}${url.pathname}`,
-    }),
-    signal: AbortSignal.timeout(10000),
+  const form = new URLSearchParams({
+    grant_type: "authorization_code",
+    code,
+    client_id: env.DROPBOX_APP_KEY,
+    code_verifier: verifier,
+    redirect_uri: redirectUri(url),
   });
+  const res = await fetch(TOKEN_URL, { method: "POST", body: form, signal: AbortSignal.timeout(10000) });
   const token = await res.json().catch(() => ({}));
   if (!res.ok || !token.refresh_token) {
     log("oauth_error", { status: res.status, error: token.error || "-" });
     return { ok: false, message: `Dropbox rejected the authorisation (${token.error || res.status}). Open the authorisation link again to retry.` };
+  }
+  await env.CACHE.delete?.(VERIFIER_KV_KEY);
+
+  const granted = String(token.scope || "").split(/\s+/);
+  const missing = REQUIRED_SCOPES.filter((s) => token.scope && !granted.includes(s));
+  if (missing.length) {
+    log("oauth_error", { error: "missing_scope", missing: missing.join(",") });
+    return {
+      ok: false,
+      message: `Connected, but the Dropbox app lacks ${missing.join(" and ")}. Enable them on the app's Permissions tab, click Submit, then authorise again.`,
+    };
   }
 
   const path = env.DROPBOX_PROFILE_PATH || "/Job hunting/PROFILE.md";
@@ -257,10 +303,12 @@ export async function handleDropboxCallback(url, env) {
     };
   }
 
-  await env.CACHE.put(OAUTH_KV_KEY, token.refresh_token, { expirationTtl: 3600 });
+  await env.CACHE.put(OAUTH_KV_KEY, JSON.stringify({ app_key: env.DROPBOX_APP_KEY, refresh_token: token.refresh_token }), {
+    expirationTtl: 3600,
+  });
   log("oauth_ok", { rev: info.rev });
   return {
     ok: true,
-    message: `Sergey AI is connected to Dropbox and can read ${info.path_display} (last modified ${info.server_modified}). You can close this tab.`,
+    message: `Sergey AI is connected to Dropbox and can read ${info.path_display || path} (last modified ${info.server_modified}). You can close this tab.`,
   };
 }

@@ -3,6 +3,7 @@ import { ChatError, complete } from "./llm.js";
 import { getProfile } from "./profile.js";
 import { getWebsite, formatWebsite } from "./website.js";
 import { addUsage, getUsage, log } from "./store.js";
+import { checkRateLimits } from "./ratelimit.js";
 
 // User-facing text for every error code. The frontend shows `message` as a
 // system notice, never as an AI answer.
@@ -96,14 +97,6 @@ export async function handleChat(request, env, ctx, cfg) {
   const started = Date.now();
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
 
-  if (env.RL_IP) {
-    const { success } = await env.RL_IP.limit({ key: `ip:${ip}` });
-    if (!success) throw new ChatError("rate_limited", 429, "per-IP limit");
-  }
-  if (env.RL_GLOBAL) {
-    const { success } = await env.RL_GLOBAL.limit({ key: "chat" });
-    if (!success) throw new ChatError("rate_limited", 429, "global limit");
-  }
 
   const declared = Number(request.headers.get("Content-Length") || 0);
   if (declared > cfg.MAX_BODY_BYTES) throw new ChatError("request_too_large", 413, `${declared} bytes`);
@@ -117,6 +110,9 @@ export async function handleChat(request, env, ctx, cfg) {
   }
   const messages = normaliseMessages(body, cfg);
 
+  // Limits are checked after validation so malformed requests don't use up quota.
+  const limited = await checkRateLimits(env, cfg, ip);
+  if (limited) throw new ChatError("rate_limited", 429, limited);
   if (cfg.DAILY_CHAT_LIMIT > 0) {
     const usage = await getUsage(env);
     if (usage.requests >= cfg.DAILY_CHAT_LIMIT) throw new ChatError("daily_limit", 429, `${usage.requests} today`);

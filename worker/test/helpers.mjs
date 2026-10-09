@@ -6,6 +6,7 @@ import worker from "../src/index.js";
 import { resetProfileState } from "../src/profile.js";
 import { resetWebsiteState } from "../src/website.js";
 import { resetMemoryUsage } from "../src/store.js";
+import { resetRateLimits } from "../src/ratelimit.js";
 
 const SITE_ROOT = new URL("../../", import.meta.url);
 
@@ -58,6 +59,7 @@ export function createWorld() {
     calls: { token: 0, metadata: 0, download: 0, website: 0, openai: 0 },
     openaiRequests: [],
     issuedTokens: 0,
+    scopes: "account_info.read files.content.read files.metadata.read",
   };
 
   world.fetch = async (input, init = {}) => {
@@ -71,12 +73,18 @@ export function createWorld() {
       if (world.dropboxDown) return new Response("upstream error", { status: 503 });
       const form = new URLSearchParams(String(init.body));
       if (form.get("grant_type") === "authorization_code") {
-        if (form.get("code") !== "good-code" || form.get("client_secret") !== SECRETS.DROPBOX_APP_SECRET) {
+        if (form.get("code") !== "good-code" || !form.get("code_verifier") || form.get("client_secret")) {
           return json({ error: "invalid_grant" }, 400);
         }
         world.redirectUriUsed = form.get("redirect_uri");
-        return json({ access_token: "sl.access-oauth", refresh_token: "dbx-new-refresh-token-TEST-SECRET", expires_in: 14400 });
+        return json({
+          access_token: "sl.access-oauth",
+          refresh_token: "dbx-new-refresh-token-TEST-SECRET",
+          expires_in: 14400,
+          scope: world.scopes,
+        });
       }
+      world.refreshSentSecret = form.has("client_secret");
       if (world.tokenRevoked || form.get("refresh_token") !== SECRETS.DROPBOX_REFRESH_TOKEN) {
         return json({ error: "invalid_grant", error_description: "refresh token is invalid or revoked" }, 400);
       }
@@ -93,6 +101,7 @@ export function createWorld() {
       return json({
         ".tag": "file",
         name: "PROFILE.md",
+        path_display: "/Job hunting/PROFILE.md",
         rev: world.profile.rev,
         server_modified: world.profile.modified,
         size: world.profile.text.length,
@@ -177,6 +186,9 @@ export function createKV() {
     async put(key, value) {
       store.set(key, value);
     },
+    async delete(key) {
+      store.delete(key);
+    },
   };
 }
 
@@ -204,6 +216,7 @@ export function resetAll() {
   resetProfileState();
   resetWebsiteState();
   resetMemoryUsage();
+  resetRateLimits();
 }
 
 export async function chat(env, messages, { origin = "https://www.alexeev.pw", ip = "203.0.113.7", rawBody } = {}) {
@@ -220,9 +233,9 @@ export async function chat(env, messages, { origin = "https://www.alexeev.pw", i
 
 export async function get(env, path, headers = {}) {
   const ctx = createCtx();
-  const res = await worker.fetch(new Request(`https://worker.example${path}`, { headers }), env, ctx);
+  const res = await worker.fetch(new Request(`https://worker.example${path}`, { headers, redirect: "manual" }), env, ctx);
   await ctx.settle();
-  return { status: res.status, text: await res.text() };
+  return { status: res.status, text: await res.text(), location: res.headers.get("Location") };
 }
 
 export function lastSystemPrompt(world) {

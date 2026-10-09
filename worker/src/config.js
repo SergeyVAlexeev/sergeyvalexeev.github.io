@@ -41,6 +41,8 @@ const DEFAULTS = {
 
   // Abuse and cost limits.
   ALLOWED_ORIGINS: "https://www.alexeev.pw,https://alexeev.pw,https://sergeyvalexeev.github.io",
+  RATE_LIMIT_PER_IP_PER_MIN: 6,
+  RATE_LIMIT_GLOBAL_PER_MIN: 30,
   MAX_BODY_BYTES: 100000,
   MAX_USER_MESSAGE_CHARS: 8000,
   MAX_ASSISTANT_MESSAGE_CHARS: 4000,

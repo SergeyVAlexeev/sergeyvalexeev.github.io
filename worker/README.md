@@ -76,19 +76,18 @@ curl -s -H "Authorization: Bearer $DIAG_TOKEN" https://alexeev-website-chat.serg
 | Secret | What |
 |---|---|
 | `OPENAI_API_KEY` | OpenAI key from project `website-chat` |
-| `DROPBOX_APP_KEY`, `DROPBOX_APP_SECRET` | Dropbox app `Sergey-AI-Website` (Full Dropbox; scopes `files.metadata.read`, `files.content.read`) |
-| `DROPBOX_REFRESH_TOKEN` | Long-lived token from `scripts/dropbox-auth.mjs` |
+| `DROPBOX_APP_KEY` | Dropbox app `Sergey-AI-Website` (Full Dropbox; scopes `files.metadata.read`, `files.content.read`) |
+| `DROPBOX_REFRESH_TOKEN` | Long-lived PKCE refresh token from `scripts/dropbox-auth.mjs`; renews with the app key alone, so no app secret is stored |
 | `DIAG_TOKEN` | Any long random string; protects `/diag` |
 
 Add `--env staging` to target the staging Worker.
 
-- **Dropbox (set up or rotate):** with `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`,
-  `DROPBOX_APP_KEY` and `DROPBOX_APP_SECRET` in the environment, run `node scripts/dropbox-auth.mjs --production`.
-  It prints a Dropbox link. After the person clicks Allow, Dropbox redirects to the staging Worker's
-  one-time `/oauth/dropbox` callback, which exchanges the code. The script then stores the refresh token as a
-  secret on both Workers and disables the callback. The Dropbox app must list the redirect URI
-  `https://alexeev-website-chat-staging.sergei-v-alexeev.workers.dev/oauth/dropbox`. To revoke: Dropbox →
-  Settings → Connected apps, or regenerate the app secret, then run the script again.
+- **Dropbox (set up or rotate):** add the app key as secret `DROPBOX_APP_KEY` on the staging Worker
+  (Cloudflare dashboard → Workers → `alexeev-website-chat-staging` → Settings → Variables and Secrets), and register the
+  redirect URI `https://alexeev-website-chat-staging.sergei-v-alexeev.workers.dev/oauth/dropbox` in the Dropbox app.
+  Then run `node scripts/dropbox-auth.mjs --production` and give the person the printed link. They click Allow;
+  the staging Worker does the PKCE exchange, checks the scopes and the profile path, and the script moves the token into
+  secrets on both Workers and disables the endpoint. To revoke: Dropbox → Settings → Connected apps.
 - **OpenAI:** create a key in the `website-chat` project, then run `npx wrangler secret put OPENAI_API_KEY`
   and paste the key at the prompt. Delete the old key in OpenAI once the new one is confirmed working.
 - **Diagnostics token:** `npx wrangler secret put DIAG_TOKEN` (generate one with
@@ -144,8 +143,8 @@ costs about $0.005–0.01, so $5 covers roughly 500–1,000 conversations. These
 
 | Limit | Default | Setting |
 |---|---|---|
-| Per-IP requests | 6 per minute per Cloudflare location | `ratelimits` in `wrangler.jsonc` |
-| All visitors | 30 per minute per location | `ratelimits` |
+| Per-IP requests | 6 per minute (binding per location, plus in-memory per isolate) | `ratelimits`, `RATE_LIMIT_PER_IP_PER_MIN` |
+| All visitors | 30 per minute (same mechanisms) | `ratelimits`, `RATE_LIMIT_GLOBAL_PER_MIN` |
 | Daily chats | 300 (approximate, KV) | `DAILY_CHAT_LIMIT` |
 | Message length | 8,000 characters | `MAX_USER_MESSAGE_CHARS` |
 | History | 12 messages, 24,000 characters | `MAX_HISTORY_MESSAGES`, `MAX_HISTORY_CHARS` |
@@ -153,7 +152,11 @@ costs about $0.005–0.01, so $5 covers roughly 500–1,000 conversations. These
 | AI timeout | 30 s (the browser gives up at 45 s) | `OPENAI_TIMEOUT_MS` |
 | Request origin | alexeev.pw only | `ALLOWED_ORIGINS` |
 
-Worst case at the daily cap is about $1 per day. OpenAI auto-recharge stays off, so the prepaid balance is
+The per-minute limits are approximate. In staging tests on 9 Oct 2026 the rate-limit binding did not throttle
+40 sequential requests from one data centre, and the in-memory window only catches bursts that hit the same
+isolate. A single Durable Object limiter enforced the limits exactly (30 admitted, then 429), but it is not enabled:
+it adds a Cloudflare resource and is pending approval (see `src/ratelimit.js`, `DEPLOY.md`). Worst case at the daily
+cap is about $1 per day. OpenAI auto-recharge stays off, so the prepaid balance is
 the hard ceiling. A monthly budget can also be set in OpenAI under Project → Limits.
 
 ## Diagnosing failures
