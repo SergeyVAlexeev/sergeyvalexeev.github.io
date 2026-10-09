@@ -152,11 +152,11 @@ costs about $0.005–0.01, so $5 covers roughly 500–1,000 conversations. These
 | AI timeout | 30 s (the browser gives up at 45 s) | `OPENAI_TIMEOUT_MS` |
 | Request origin | alexeev.pw only | `ALLOWED_ORIGINS` |
 
-The per-minute limits are approximate. In staging tests on 9 Oct 2026 the rate-limit binding did not throttle
-40 sequential requests from one data centre, and the in-memory window only catches bursts that hit the same
-isolate. A single Durable Object limiter enforced the limits exactly (30 admitted, then 429), but it is not enabled:
-it adds a Cloudflare resource and is pending approval (see `src/ratelimit.js`, `DEPLOY.md`). Worst case at the daily
-cap is about $1 per day. OpenAI auto-recharge stays off, so the prepaid balance is
+The per-minute limits are approximate. In a staging test on 9 Oct 2026, 40 sequential requests from one fixed client
+gave 19 answers and 21 × 429: the per-IP binding throttles a stable client, but lets more through than its nominal
+limit. Requests whose source IP changes each time (as from some cloud hosts) were not throttled by the binding. The
+in-memory window is a per-isolate backstop for the global limit. A Durable Object limiter is deliberately not used.
+Worst case at the daily cap is about $1 per day. OpenAI auto-recharge stays off, so the prepaid balance is
 the hard ceiling. A monthly budget can also be set in OpenAI under Project → Limits.
 
 ## Diagnosing failures

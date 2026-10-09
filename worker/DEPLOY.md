@@ -79,6 +79,13 @@ value cannot be read, only reused. Live AI tests need the $5 prepaid credit Serg
   (`fd569692`, staging only, created before Sergey's stop note, free plan, no token change): 40 sequential requests,
   **30 admitted then 10 × 429**, exact. Its namespace stays on staging, dormant, until Sergey decides (delete with a
   `deleted_classes` migration, or adopt). Staging now runs `952c8c0d` (binding + in-memory backstop).
+- 2026-10-09: **Fixed-source test by Sergey** on staging `952c8c0d`: 40 sequential POSTs from one local client gave
+  19 × 503 (`ai_not_configured`) and 21 × 429; no OpenAI calls were made. This confirms the `RL_IP` binding
+  throttles a stable client once it exceeds its limit. It admitted 19 against a nominal 6 per minute: the binding is
+  approximate, as Cloudflare documents. The earlier 0-throttle runs came from the cloud sandbox, whose egress IP
+  rotates per request.
+- **Decision (Sergey):** keep the binding-based version and the in-memory global fallback. Do not add or use a
+  Durable Object. Do not run this load test against production.
 - **On hold (Sergey):** Dropbox app shows only `account_info.read`; `files.metadata.read`/`files.content.read` are
-  off, so no OAuth yet. OpenAI credit and approval of live AI tests pending. No production deploy or merge until
-  these are resolved and end-to-end tests pass. Sergey will test the staging per-IP binding from a fixed IP.
+  off, so no OAuth yet. The OpenAI key/credit question is unresolved. No production deploy or merge until these are
+  resolved and end-to-end tests pass.
