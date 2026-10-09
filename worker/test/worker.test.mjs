@@ -379,3 +379,33 @@ test("CORS: preflight allowed only for listed origins", async () => {
   assert.equal((await pre("https://www.alexeev.pw")).headers.get("Access-Control-Allow-Origin"), "https://www.alexeev.pw");
   assert.equal((await pre("https://evil.example")).headers.get("Access-Control-Allow-Origin"), null);
 });
+
+// ---------- One-time Dropbox OAuth callback ----------
+
+test("OAuth: callback is disabled unless DROPBOX_OAUTH_STATE is set, and checks state", async () => {
+  assert.equal((await get(createEnv(), "/oauth/dropbox?code=good-code&state=x")).status, 404);
+  const env = createEnv({ DROPBOX_OAUTH_STATE: "s3cret-state" });
+  assert.equal((await get(env, "/oauth/dropbox?code=good-code&state=wrong")).status, 404);
+  assert.equal(world.calls.token, 0);
+});
+
+test("OAuth: valid redirect exchanges the code, verifies the profile path and parks the token in KV", async () => {
+  const env = createEnv({ DROPBOX_OAUTH_STATE: "s3cret-state" });
+  const r = await get(env, "/oauth/dropbox?code=good-code&state=s3cret-state");
+  assert.equal(r.status, 200);
+  assert.match(r.text, /connected to Dropbox and can read PROFILE\.md|can read/);
+  assert.equal(world.redirectUriUsed, "https://worker.example/oauth/dropbox");
+  assert.equal(env.CACHE.store.get("oauth:dropbox_refresh_token"), "dbx-new-refresh-token-TEST-SECRET");
+  assert.doesNotMatch(r.text, /dbx-new-refresh-token/);
+});
+
+test("OAuth: bad code and App-folder apps get clear messages", async () => {
+  const env = createEnv({ DROPBOX_OAUTH_STATE: "st", DROPBOX_PROFILE_PATH: "/elsewhere/PROFILE.md" });
+  let r = await get(env, "/oauth/dropbox?code=bad&state=st");
+  assert.equal(r.status, 400);
+  assert.match(r.text, /rejected/);
+  r = await get(env, "/oauth/dropbox?code=good-code&state=st");
+  assert.equal(r.status, 400);
+  assert.match(r.text, /Full Dropbox/);
+  assert.equal(env.CACHE.store.get("oauth:dropbox_refresh_token"), undefined);
+});

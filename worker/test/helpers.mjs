@@ -70,6 +70,13 @@ export function createWorld() {
       world.calls.token++;
       if (world.dropboxDown) return new Response("upstream error", { status: 503 });
       const form = new URLSearchParams(String(init.body));
+      if (form.get("grant_type") === "authorization_code") {
+        if (form.get("code") !== "good-code" || form.get("client_secret") !== SECRETS.DROPBOX_APP_SECRET) {
+          return json({ error: "invalid_grant" }, 400);
+        }
+        world.redirectUriUsed = form.get("redirect_uri");
+        return json({ access_token: "sl.access-oauth", refresh_token: "dbx-new-refresh-token-TEST-SECRET", expires_in: 14400 });
+      }
       if (world.tokenRevoked || form.get("refresh_token") !== SECRETS.DROPBOX_REFRESH_TOKEN) {
         return json({ error: "invalid_grant", error_description: "refresh token is invalid or revoked" }, 400);
       }

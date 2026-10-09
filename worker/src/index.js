@@ -4,13 +4,15 @@
 //                 -> 200 { text } or 4xx/5xx { error: { code, message } }
 //   GET  /health  public, cheap, no outbound calls
 //   GET  /diag    live checks; requires "Authorization: Bearer <DIAG_TOKEN>"
+//   GET  /oauth/dropbox  one-time Dropbox OAuth redirect target; 404 unless
+//                 the DROPBOX_OAUTH_STATE secret is set (scripts/dropbox-auth.mjs)
 
 import { getConfig } from "./config.js";
 import { ChatError, checkModelAccess, complete } from "./llm.js";
 import { ERROR_MESSAGES, handleChat } from "./chat.js";
-import { dropboxConfigured, getProfile, profileState } from "./profile.js";
+import { dropboxConfigured, getProfile, handleDropboxCallback, profileState } from "./profile.js";
 import { getWebsite, websiteState } from "./website.js";
-import { getUsage, log } from "./store.js";
+import { getUsage, log, safeEqual } from "./store.js";
 
 function corsHeaders(origin, cfg) {
   const h = { Vary: "Origin" };
@@ -53,13 +55,6 @@ function health(env, cfg) {
     profile: p.profile ? (p.lastError ? "stale" : "ok") : p.lastError ? "error" : "unknown",
     website: w.snapshot ? (w.lastError ? "partial" : "ok") : "unknown",
   };
-}
-
-function safeEqual(a, b) {
-  if (typeof a !== "string" || typeof b !== "string" || a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return diff === 0;
 }
 
 async function sha256(text) {
@@ -162,6 +157,15 @@ export default {
 
       if (request.method === "GET" && (path === "/" || path === "/health")) {
         return json(health(env, cfg), 200, cors);
+      }
+
+      if (request.method === "GET" && path === "/oauth/dropbox") {
+        const result = await handleDropboxCallback(url, env);
+        if (!result) return errorResponse("not_found", 404, cors);
+        return new Response(result.message + "\n", {
+          status: result.ok ? 200 : 400,
+          headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
+        });
       }
 
       if (request.method === "GET" && path === "/diag") {

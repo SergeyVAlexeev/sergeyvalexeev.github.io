@@ -6,7 +6,7 @@
 // fails, the last successfully loaded copy (memory, then KV) is returned and
 // marked stale with its age.
 
-import { kvGet, kvPut, log } from "./store.js";
+import { kvGet, kvPut, log, safeEqual } from "./store.js";
 
 const TOKEN_URL = "https://api.dropboxapi.com/oauth2/token";
 const METADATA_URL = "https://api.dropboxapi.com/2/files/get_metadata";
@@ -202,4 +202,65 @@ export async function getProfile(env, cfg, ctx) {
       ? { ...withStatus(state.profile, "stale", now), error: message }
       : { status: "unavailable", error: message };
   }
+}
+
+// ---------- One-time OAuth redirect target ----------
+// Active only while the DROPBOX_OAUTH_STATE secret is set. Dropbox redirects
+// the browser here after "Allow"; the Worker exchanges the code itself, so the
+// code never has to be copied anywhere. The refresh token is parked in KV for
+// at most an hour until scripts/dropbox-auth.mjs moves it into a secret.
+export const OAUTH_KV_KEY = "oauth:dropbox_refresh_token";
+
+export async function handleDropboxCallback(url, env) {
+  const expected = env.DROPBOX_OAUTH_STATE;
+  if (!expected || !env.CACHE || !env.DROPBOX_APP_KEY || !env.DROPBOX_APP_SECRET) return null;
+  if (!safeEqual(url.searchParams.get("state") || "", expected)) return null;
+
+  if (url.searchParams.get("error")) {
+    return { ok: false, message: "Dropbox authorisation was cancelled. Open the authorisation link again to retry." };
+  }
+  const code = url.searchParams.get("code");
+  if (!code) return { ok: false, message: "No authorisation code received from Dropbox." };
+
+  const res = await fetch(TOKEN_URL, {
+    method: "POST",
+    body: new URLSearchParams({
+      grant_type: "authorization_code",
+      code,
+      client_id: env.DROPBOX_APP_KEY,
+      client_secret: env.DROPBOX_APP_SECRET,
+      redirect_uri: `${url.origin}${url.pathname}`,
+    }),
+    signal: AbortSignal.timeout(10000),
+  });
+  const token = await res.json().catch(() => ({}));
+  if (!res.ok || !token.refresh_token) {
+    log("oauth_error", { status: res.status, error: token.error || "-" });
+    return { ok: false, message: `Dropbox rejected the authorisation (${token.error || res.status}). Open the authorisation link again to retry.` };
+  }
+
+  const path = env.DROPBOX_PROFILE_PATH || "/Job hunting/PROFILE.md";
+  const meta = await fetch(METADATA_URL, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token.access_token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ path }),
+    signal: AbortSignal.timeout(10000),
+  });
+  const info = await meta.json().catch(() => ({}));
+  if (!meta.ok) {
+    log("oauth_error", { status: meta.status, error: info.error_summary || "-" });
+    return {
+      ok: false,
+      message:
+        `Connected to Dropbox, but the app cannot read ${path} (${info.error_summary || meta.status}). ` +
+        "If this says path/not_found, the Dropbox app must use 'Full Dropbox' access, not 'App folder'.",
+    };
+  }
+
+  await env.CACHE.put(OAUTH_KV_KEY, token.refresh_token, { expirationTtl: 3600 });
+  log("oauth_ok", { rev: info.rev });
+  return {
+    ok: true,
+    message: `Sergey AI is connected to Dropbox and can read ${info.path_display} (last modified ${info.server_modified}). You can close this tab.`,
+  };
 }

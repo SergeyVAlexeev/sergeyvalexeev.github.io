@@ -34,11 +34,12 @@
 
   // Separate test Worker: npx wrangler deploy --env staging
   // -> https://alexeev-website-chat-staging.<subdomain>.workers.dev
-  // Bindings and vars are not inherited, so they are repeated here. No KV:
-  // staging runs with in-memory caching only.
+  // Bindings and vars are not inherited, so they are repeated here. Staging
+  // has its own KV namespace (also used by the one-time Dropbox OAuth callback).
   "env": {
     "staging": {
       "name": "alexeev-website-chat-staging",
+      "kv_namespaces": [{ "binding": "CACHE", "id": "REPLACE_WITH_STAGING_KV_NAMESPACE_ID" }],
       "vars": {
         "OPENAI_MODEL": "gpt-6-luna",
         "OPENAI_REASONING_EFFORT": "low",

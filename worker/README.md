@@ -82,9 +82,13 @@ curl -s -H "Authorization: Bearer $DIAG_TOKEN" https://alexeev-website-chat.serg
 
 Add `--env staging` to target the staging Worker.
 
-- **Dropbox (set up or rotate):** `npx wrangler login`, then `node scripts/dropbox-auth.mjs --production`
-  (or `--staging`). To revoke: Dropbox → Settings → Connected apps, or regenerate the app secret, then
-  run the script again.
+- **Dropbox (set up or rotate):** with `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`,
+  `DROPBOX_APP_KEY` and `DROPBOX_APP_SECRET` in the environment, run `node scripts/dropbox-auth.mjs --production`.
+  It prints a Dropbox link. After the person clicks Allow, Dropbox redirects to the staging Worker's
+  one-time `/oauth/dropbox` callback, which exchanges the code. The script then stores the refresh token as a
+  secret on both Workers and disables the callback. The Dropbox app must list the redirect URI
+  `https://alexeev-website-chat-staging.sergei-v-alexeev.workers.dev/oauth/dropbox`. To revoke: Dropbox →
+  Settings → Connected apps, or regenerate the app secret, then run the script again.
 - **OpenAI:** create a key in the `website-chat` project, then run `npx wrangler secret put OPENAI_API_KEY`
   and paste the key at the prompt. Delete the old key in OpenAI once the new one is confirmed working.
 - **Diagnostics token:** `npx wrangler secret put DIAG_TOKEN` (generate one with
