@@ -18,7 +18,7 @@ browser (index.html) ──POST──> Worker ──> Dropbox API: /Job hunting/
 | `src/index.js` | Routing, CORS, `/health`, `/diag` |
 | `src/chat.js` | Request validation and limits, context assembly, user-facing error messages |
 | `src/system-prompt.md` | The system prompt. Edit freely; it is bundled at deploy time |
-| `src/profile.js` | Dropbox refresh-token auth, revision check, download, referee filtering, fallback |
+| `src/profile.js` | Dropbox refresh-token auth, revision check, download, optional section filtering, fallback |
 | `src/website.js` | Page fetching, HTML-to-text extraction, caching |
 | `src/llm.js` | AI provider call and error classification |
 | `src/config.js` | Every tunable and its default. Each can be overridden by a Worker variable |
@@ -30,8 +30,9 @@ browser (index.html) ──POST──> Worker ──> Dropbox API: /Job hunting/
 ## Sources of truth
 
 - **Profile:** `/Job hunting/PROFILE.md` in Sergey's Dropbox (`C:\Users\serge\Dropbox\Job hunting\PROFILE.md` locally).
-  Preferred for roles, experience, expertise, methods and supervision. Sections whose heading
-  matches `PROFILE_EXCLUDE_HEADINGS` (default `referee`) are removed before caching or sending to the model.
+  Preferred for roles, experience, expertise, methods and supervision. By default no sections are withheld;
+  professional referee names in the profile may be shared. The optional `PROFILE_EXCLUDE_HEADINGS`
+  setting can exclude specified Markdown sections if needed later.
 - **Website:** pages listed in `WEBSITE_PAGES` (homepage, the two research films, REVALUE-AU, HOPE, FAMILY).
   Preferred for publications, their status and links. HTML comments, scripts, navigation, forms,
   buttons and hidden elements (such as the chat panel) are dropped. To add a page, append its URL to `WEBSITE_PAGES`.
@@ -189,7 +190,7 @@ the hard ceiling. A monthly budget can also be set in OpenAI under Project → L
 ## Tests
 
 `npm test` runs the scenario suite (Node's built-in runner, no extra dependencies). It covers profile
-revision changes, referee filtering, website extraction and caching, credit and other provider errors,
+revision changes, referee inclusion, website extraction and caching, credit and other provider errors,
 Dropbox and website outages with fallback, conversation handling, every limit, and that no secret
 reaches responses or logs. `npm run check` builds the Worker without deploying. CI runs both
 (`.github/workflows/worker-tests.yml`).

@@ -59,13 +59,14 @@ test("A: the access token is reused, and refreshed once when Dropbox rejects it"
   assert.equal(world.calls.token, 2);
 });
 
-test("A: referee section is removed before caching or sending to the model", async () => {
+test("A: professional referee details are retained in profile context", async () => {
   const env = createEnv();
   await chat(env, ask("Who are his referees?"));
   const prompt = lastSystemPrompt(world);
-  assert.doesNotMatch(prompt, /Referee One|referee\.one@example\.edu|\+61 400 000 000/);
-  assert.match(prompt, /Profile maintenance rule/); // content after the section survives
-  assert.doesNotMatch(env.CACHE.store.get("profile"), /Referee One/);
+  assert.match(prompt, /Referee One|referee\.one@example\.edu/);
+  assert.match(prompt, /Referee Two|\+61 400 000 000/);
+  assert.match(prompt, /Profile maintenance rule/);
+  assert.match(env.CACHE.store.get("profile"), /Referee One/);
 });
 
 // ---------- B. Publication information from the live website ----------
@@ -471,7 +472,7 @@ test("A: a marker line at the very top of PROFILE.md reaches the model, and the 
   const profileBlock = prompt.slice(prompt.indexOf("<profile"), prompt.indexOf("</profile>"));
   assert.match(profileBlock, /^<profile[^>]*>\nTEMP-MARKER-7f3a: refresh check\n/);
   assert.match(prompt, /you may report relevant, non-sensitive facts/);
-  assert.match(prompt, /Never share referee details, private contact details, credentials, or sensitive personal information/);
+  assert.match(prompt, /Referee names listed in the professional profile may be shared when relevant/);
   assert.doesNotMatch(prompt, /beyond the professional facts/);
-  assert.doesNotMatch(profileBlock, /Referee One/);
+  assert.match(profileBlock, /Referee One/);
 });

@@ -23,7 +23,7 @@ const DEFAULTS = {
   PROFILE_MAX_CHARS: 40000,
   // Markdown sections whose heading matches this (case-insensitive regex)
   // are removed before the profile is cached or sent to the model.
-  PROFILE_EXCLUDE_HEADINGS: "referee",
+  PROFILE_EXCLUDE_HEADINGS: "", // No sections withheld; professional referees are public.
 
   // Public website pages to extract. The first page may be longer.
   WEBSITE_PAGES: [
