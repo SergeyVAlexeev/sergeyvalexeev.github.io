@@ -307,10 +307,23 @@ body.nav-open{
   cursor: pointer;
 }
 
-.pub-title:hover,
-.pub-title:focus{
+.pub-title:not(.pub-preview):hover,
+.pub-title:not(.pub-preview):focus{
   color: var(--link);
   text-decoration: underline;
+}
+
+/* Titles with preview cards are information triggers, not links. */
+.pub-title.pub-preview{
+  color: var(--fg);
+  text-decoration: none;
+  cursor: help;
+}
+
+.pub-title.pub-preview:hover,
+.pub-title.pub-preview:focus{
+  color: var(--fg);
+  text-decoration: none;
 }
 
 .pub-title:focus{
@@ -1777,20 +1790,31 @@ across the 20th century.
 </script>
 
 <script>
-  // Only prevent navigation for pub titles that actually have an abstract preview card.
+  // A title with an abstract/description card is a preview trigger, not navigation.
+  // Convert any legacy linked preview titles into focusable text so visual,
+  // pointer and keyboard behaviour all match the actual interaction.
+  document.querySelectorAll('.pub-title').forEach(function (el) {
+    if (!el.querySelector('.abs')) return;
+
+    let preview = el;
+    if (el.tagName === 'A') {
+      const span = document.createElement('span');
+      span.className = el.className;
+      if (el.id) span.id = el.id;
+      span.innerHTML = el.innerHTML;
+      el.replaceWith(span);
+      preview = span;
+    }
+
+    preview.classList.add('pub-preview');
+    preview.setAttribute('tabindex', '0');
+  });
+
+  // On touch/click, focus the preview trigger so the same card shown on hover
+  // remains available without pretending the title is a destination link.
   document.addEventListener('click', function (e) {
-    const el = e.target.closest?.('.pub-title');
+    const el = e.target.closest?.('.pub-preview');
     if (!el) return;
-
-    // Let normal clicks through for simple links (e.g., "Other writing")
-    const hasPreview = !!el.querySelector('.abs');
-    if (!hasPreview) return;
-
-    // Allow modifier-click to open in new tab / etc.
-    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-
-    // Clicking the link *should* just show the preview; don't navigate.
-    e.preventDefault();
     el.focus?.();
   }, true);
 </script>
