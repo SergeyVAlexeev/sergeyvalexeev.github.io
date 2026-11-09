@@ -20,6 +20,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 .band-navy a:focus-visible{outline-color:var(--yellow);box-shadow:0 0 0 6px var(--navy)}
 .reading-section :focus-visible{box-shadow:0 0 0 6px var(--paper)}
 body[data-theme=night] .reading-section :focus-visible{outline-color:var(--yellow)}
+/* Feedback form fields: thin outer ring only, no inset/box-shadow ring. */
+input:not([type=checkbox]):not([type=radio]):focus-visible,textarea:focus-visible,.reading-section input:not([type=checkbox]):not([type=radio]):focus-visible,.reading-section textarea:focus-visible{outline:2px solid #d6a600;outline-offset:2px;box-shadow:none}
 .skip{position:absolute;left:-999px;top:0;background:var(--navy);color:#fff;padding:.7rem 1rem;z-index:100;font-family:var(--sans)}
 .skip:focus{left:0}
 [hidden]{display:none!important}
