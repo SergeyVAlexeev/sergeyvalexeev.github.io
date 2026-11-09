@@ -17,7 +17,7 @@ Not public and not in Git: `_private/` (source paths, guard hashes, local output
 
 `config.js` controls the page:
 - `chapterUrl`: Chapter 1 (set).
-- `pdfUrl`: empty. The Chapter 1 PDF is not linked yet, because its front matter still reads "Private reader draft… Shared privately… do not redistribute". Replace that notice, then set this.
+- `pdfUrl`: `/safe-return/Safe_Return_Chapter_1.pdf`, the public Chapter 1 sample (cover, title page, Chapter 1, closing author note). Built from the public sample source, not the private reader edition.
 - `feedbackEndpoint`: empty, so the form is off. Set it to the deployed Worker URL (`https://safe-return-feedback.<subdomain>.workers.dev/feedback`) and set `turnstileSiteKey`. Also replace `https://*.workers.dev` in the CSP `connect-src` in `index.html` with that exact origin.
 
 ## Checks

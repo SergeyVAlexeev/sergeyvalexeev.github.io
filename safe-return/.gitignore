@@ -2,6 +2,8 @@
 # Safe Return: unpublished manuscript text, PDFs and local dev data must never be committed.
 _private/
 **/*.pdf
+# The one public PDF (Chapter 1 sample) is allowed by check-no-private.mjs.
+!Safe_Return_Chapter_1.pdf
 **/*.tex
 **/*.docx
 **/node_modules/
