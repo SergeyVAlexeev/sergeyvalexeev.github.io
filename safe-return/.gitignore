@@ -1,0 +1,9 @@
+
+# Safe Return: unpublished manuscript text, PDFs and local dev data must never be committed.
+_private/
+**/*.pdf
+**/*.tex
+**/*.docx
+**/node_modules/
+**/.wrangler/
+**/.dev.vars
