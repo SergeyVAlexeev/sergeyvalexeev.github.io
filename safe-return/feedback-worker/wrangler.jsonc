@@ -6,12 +6,13 @@
   "workers_dev": true,
   "kv_namespaces": [
     // Create with: npx wrangler kv namespace create SAFE_RETURN_FEEDBACK  -> paste the id below
-    { "binding": "FEEDBACK", "id": "REPLACE_WITH_KV_NAMESPACE_ID" }
+    { "binding": "FEEDBACK", "id": "2a772c7d39dc4281aa9affe34cf3eec1" }
   ],
   "vars": {
     "ALLOWED_ORIGINS": "https://www.alexeev.pw",
     "RETENTION_DAYS": "365",
-    "RATE_LIMIT_PER_HOUR": "5"
+    "RATE_LIMIT_PER_HOUR": "5",
+    "TURNSTILE_HOSTNAME": "www.alexeev.pw"
   }
   // Secrets (never in this file), all required outside local DEV: ADMIN_TOKEN, RATE_SALT, TURNSTILE_SECRET
   // Also set var TURNSTILE_HOSTNAME to "www.alexeev.pw". Recommended burst limiter (per minute, in addition to the KV hourly counter):
