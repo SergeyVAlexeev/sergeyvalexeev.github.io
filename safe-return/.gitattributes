@@ -2,3 +2,5 @@
 *.woff2 binary
 *.jpg binary
 *.png binary
+*.mp3 binary
+*.webm binary

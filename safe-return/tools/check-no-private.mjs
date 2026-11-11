@@ -36,7 +36,7 @@ function scan(text, label) {
 }
 
 for (const f of files) {
-  if (/\.(jpg|png|woff2|ico|mp4|pdf)$/i.test(f) || f === ALLOWED_CHAPTER) continue;
+  if (/\.(jpg|png|woff2|ico|mp4|mp3|webm|pdf)$/i.test(f) || f === ALLOWED_CHAPTER) continue;
   let raw; try { raw = readFileSync(resolve(root, f), 'utf8'); } catch { continue; }
   scan(raw, f);
 }

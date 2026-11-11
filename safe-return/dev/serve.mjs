@@ -30,7 +30,7 @@ const env = {
   ALLOWED_ORIGINS: ORIGIN, DEV: '1', ADMIN_TOKEN: 'local-dev-token', RATE_SALT: 'local', RATE_LIMIT_PER_HOUR: '50',
 };
 
-const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.jpg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.pdf': 'application/pdf', '.txt': 'text/plain', '.xml': 'application/xml' };
+const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.jpg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.pdf': 'application/pdf', '.txt': 'text/plain', '.xml': 'application/xml', '.mp3': 'audio/mpeg', '.webm': 'audio/webm', '.vtt': 'text/vtt' };
 
 const server = http.createServer(async (req, res) => {
   const hostOk = [`localhost:${PORT}`, `127.0.0.1:${PORT}`].includes(req.headers.host || '');
@@ -56,7 +56,19 @@ const server = http.createServer(async (req, res) => {
   const lf = file.toLowerCase();
   const blocked = lf.includes(`${sep}.git${sep}`) || lf.endsWith(`${sep}.git`) || (PUBLIC_MODE && lf.startsWith(priv.toLowerCase() + sep));
   if (!lf.startsWith(root.toLowerCase() + sep) || blocked || !existsSync(file) || !statSync(file).isFile()) { res.writeHead(404); return res.end('Not found'); }
-  res.writeHead(200, { 'content-type': types[extname(file)] || 'application/octet-stream', 'cache-control': 'no-store' });
-  res.end(readFileSync(file));
+  const type = types[extname(file)] || 'application/octet-stream';
+  const buf = readFileSync(file);
+  // Single byte ranges, as GitHub Pages serves them, so audio can seek in the preview.
+  const m = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range || '');
+  if (m && (m[1] || m[2])) {
+    let a = m[1] ? Number(m[1]) : buf.length - Number(m[2]);
+    let b = m[1] && m[2] ? Math.min(Number(m[2]), buf.length - 1) : buf.length - 1;
+    if (a < 0) a = 0;
+    if (a > b || a >= buf.length) { res.writeHead(416, { 'content-range': `bytes */${buf.length}` }); return res.end(); }
+    res.writeHead(206, { 'content-type': type, 'content-range': `bytes ${a}-${b}/${buf.length}`, 'content-length': b - a + 1, 'accept-ranges': 'bytes', 'cache-control': 'no-store' });
+    return res.end(buf.subarray(a, b + 1));
+  }
+  res.writeHead(200, { 'content-type': type, 'content-length': buf.length, 'accept-ranges': 'bytes', 'cache-control': 'no-store' });
+  res.end(buf);
 });
 server.listen(PORT, '127.0.0.1', () => console.log(`Safe Return PRIVATE preview: ${ORIGIN}/safe-return/   (admin token for /api/admin/feedback: local-dev-token)`));
