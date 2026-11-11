@@ -8,6 +8,7 @@ Static section of alexeev.pw (no framework). Public and indexable.
 |---|---|
 | `index.html`, `style.css`, `app.js`, `config.js`, `fonts/`, `img/` | the page, its styles and script, the open-licence fonts (OFL) and the cover images |
 | `chapter-1.html` | Chapter 1 of the frozen v0.5.1 manuscript, converted to HTML. Checked word for word by `tools/verify-fidelity.mjs` |
+| `audio/` | AI narration of Chapter 1 (Kokoro-82M, voice bf_emma): `.webm` (Opus 40 kb/s, used where supported), `.mp3` (64 kb/s, fallback and download), `ch1-timings.json` (start time of each of the 194 paragraphs, for "Follow in the text"). Built outside this repo; see below |
 | `feedback-worker/` | source of the separate feedback Worker. No secrets, no data |
 | `tools/`, `dev/` | local checks and preview server |
 
@@ -19,6 +20,12 @@ Not public and not in Git: `_private/` (source paths, guard hashes, local output
 - `chapterUrl`: Chapter 1 (set).
 - `pdfUrl`: `/safe-return/Safe_Return_Chapter_1.pdf`, the public Chapter 1 sample (cover, title page, Chapter 1, closing author note). Built from the public sample source, not the private reader edition.
 - `feedbackEndpoint`: empty, so the form is off. Set it to the deployed Worker URL (`https://safe-return-feedback.<subdomain>.workers.dev/feedback`) and set `turnstileSiteKey`. Also replace `https://*.workers.dev` in the CSP `connect-src` in `index.html` with that exact origin.
+
+- `audio`: the narration player. It shows when `audio.mp3` is set; `timings` drives paragraph highlighting and must list one time per `<p>` in `chapter-1.html` (otherwise follow-along stays off and the player still works); `duration` is in seconds.
+
+## Narration
+
+Generated, audited and mastered in the novel project folder (`06_manuscript/audio/chapter_01_narration/`, with its own README and scripts), not here. To replace it, copy that folder's `web/` files into `audio/` and update `audio.duration`. The text spoken is the frozen Chapter 1; the chunk text is checked against the source hash and word stream before generation.
 
 ## Checks
 

@@ -66,6 +66,7 @@
         <p class="lede">At 11.48 pm a youth-service driver presses <em>Yes</em> on a screen that asks whether a child has been handed over. The case turns green. The gate is still swinging.</p>
         <p class="cta">
           <a class="btn btn-primary" id="ctaRead" href="#read">Read Chapter 1</a>
+          <a class="btn" id="ctaListen" href="#listen" hidden>Listen<span class="cta-dur" id="ctaListenDur"></span></a>
           <a class="btn" id="ctaStory" href="#story">About the book</a>
         </p>
       </div>
@@ -93,7 +94,35 @@
         </div>
 
         <div id="reader" hidden>
-          <p class="content-note"><strong>Content note.</strong> Strong language including racist and misogynistic slurs; threats and violence; an adult man claiming a 14-year-old girl, who has fresh injuries, as his partner. Chapter 1 is about 3,300 words, roughly 14 minutes. If this touches something close to you, Kids Helpline is 1800 55 1800 and 1800RESPECT is 1800 737 732.</p>
+          <p class="content-note"><strong>Content note.</strong> Strong language including racist and misogynistic slurs; threats and violence; an adult man claiming a 14-year-old girl, who has fresh injuries, as his partner. Chapter 1 is about 3,300 words, roughly 14 minutes to read<span id="listenNote" hidden>, or <span id="listenNoteMin"></span> minutes to listen</span>. If this touches something close to you, Kids Helpline is 1800 55 1800 and 1800RESPECT is 1800 737 732.</p>
+
+          <div id="listen" class="listen" role="region" aria-labelledby="listen-h" hidden>
+            <div class="listen-top">
+              <button type="button" class="pl-play" id="plPlay" aria-label="Play the narration of Chapter 1">
+                <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5.5v13a.8.8 0 0 0 1.2.7l10.4-6.5a.8.8 0 0 0 0-1.4L9.2 4.8A.8.8 0 0 0 8 5.5z"/></svg>
+                <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6.5" y="5" width="4" height="14" rx="1"/><rect x="13.5" y="5" width="4" height="14" rx="1"/></svg>
+              </button>
+              <div class="listen-text">
+                <h3 id="listen-h" class="listen-title">Listen to Chapter 1</h3>
+                <p class="listen-meta" id="plMeta">Narrated reading</p>
+              </div>
+            </div>
+            <div class="pl-bar">
+              <span class="pl-time" id="plCur">0:00</span>
+              <input type="range" id="plSeek" class="pl-seek" min="0" max="100" step="1" value="0" aria-label="Position in the narration">
+              <span class="pl-time" id="plDur">0:00</span>
+            </div>
+            <div class="pl-controls">
+              <button type="button" id="plBack" aria-label="Back 15 seconds">−15 s</button>
+              <button type="button" id="plFwd" aria-label="Forward 30 seconds">+30 s</button>
+              <button type="button" id="plRate" aria-label="Playback speed: normal">1×</button>
+              <label class="pl-follow"><input type="checkbox" id="plFollow" checked> Follow in the text</label>
+              <a id="plMp3" class="pl-dl" href="#" download hidden>Download MP3</a>
+            </div>
+            <p class="pl-note" id="plNote"></p>
+            <audio id="narration" preload="none"></audio>
+          </div>
+
           <div class="toolbar" role="group" aria-label="Reading settings">
             <span class="tb-group"><span class="tb-label" id="sizeLabel">Text size</span>
               <button type="button" id="smaller" aria-label="A minus, smaller text" aria-describedby="sizeLabel">A−</button>
@@ -194,6 +223,16 @@
       </div>
     </section>
   </main>
+
+  <div id="miniPlayer" class="mini" role="region" aria-label="Narration controls" hidden>
+    <button type="button" id="miniPlay" class="mini-play" aria-label="Pause the narration">
+      <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5.5v13a.8.8 0 0 0 1.2.7l10.4-6.5a.8.8 0 0 0 0-1.4L9.2 4.8A.8.8 0 0 0 8 5.5z"/></svg>
+      <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6.5" y="5" width="4" height="14" rx="1"/><rect x="13.5" y="5" width="4" height="14" rx="1"/></svg>
+    </button>
+    <span class="mini-label">Chapter 1 <span class="mini-time" id="miniTime">0:00</span></span>
+    <a class="mini-jump" href="#listen">Player</a>
+    <span class="mini-progress" aria-hidden="true"><span id="miniFill"></span></span>
+  </div>
 
   <footer class="site-footer">
     <p>© Sergey Alexeev. Safe Return is an unpublished work; all rights reserved.</p>
