@@ -16,9 +16,9 @@ window.SAFE_RETURN = {
     webm: '/safe-return/audio/safe-return-ch1-porch-light.webm',
     timings: '/safe-return/audio/ch1-timings.json',
     download: '/safe-return/audio/safe-return-ch1-porch-light.mp3',
-    duration: 1383,
+    duration: 1208.76,
     credit: 'AI narration',
-    note: 'AI-generated narration of the unchanged Chapter 1 text, made with Kokoro, an open-source text-to-speech model (British English voice).'
+    note: 'AI-generated narration of the unchanged Chapter 1 text, produced locally with Qwen3-TTS 1.7B using original synthetic voices.'
   },
   video: { src: '', poster: '', captions: '', captionsLang: 'en', title: '', transcriptUrl: '' }
 };

@@ -8,7 +8,7 @@ Static section of alexeev.pw (no framework). Public and indexable.
 |---|---|
 | `index.html`, `style.css`, `app.js`, `config.js`, `fonts/`, `img/` | the page, its styles and script, the open-licence fonts (OFL) and the cover images |
 | `chapter-1.html` | Chapter 1 of the frozen v0.5.1 manuscript, converted to HTML. Checked word for word by `tools/verify-fidelity.mjs` |
-| `audio/` | AI narration of Chapter 1 (Kokoro-82M, voice bf_emma): `.webm` (Opus 40 kb/s, used where supported), `.mp3` (64 kb/s, fallback and download), `ch1-timings.json` (start time of each of the 194 paragraphs, for "Follow in the text"). Built outside this repo; see below |
+| `audio/` | Locally generated Qwen3-TTS 1.7B narration of Chapter 1 with a small original synthetic cast: `.webm` (Opus 40 kb/s, used where supported), `.mp3` (64 kb/s, fallback and download), `ch1-timings.json` (start time of each of the 194 paragraphs, for "Follow in the text"). Built outside this repo; see below |
 | `feedback-worker/` | source of the separate feedback Worker. No secrets, no data |
 | `tools/`, `dev/` | local checks and preview server |
 
@@ -25,7 +25,7 @@ Not public and not in Git: `_private/` (source paths, guard hashes, local output
 
 ## Narration
 
-Generated, audited and mastered in the novel project folder (`06_manuscript/audio/chapter_01_narration/`, with its own README and scripts), not here. To replace it, copy that folder's `web/` files into `audio/` and update `audio.duration`. The text spoken is the frozen Chapter 1; the chunk text is checked against the source hash and word stream before generation.
+Generated, audited and mastered locally in the novel project folder (`06_manuscript/audio/chapter_01_narration/NUC1/`) with Qwen3-TTS 1.7B, not in this repository. To replace it, copy the production `.webm`, `.mp3` and `ch1-timings.json` into `audio/` and update `audio.duration`. The spoken text is the frozen v0.5.1 Chapter 1; source identity, span word streams, speaker assignments, mastering and per-paragraph diagnostic transcription are recorded with the production assets.
 
 ## Checks
 
