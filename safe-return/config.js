@@ -18,7 +18,7 @@ window.SAFE_RETURN = {
     download: '/safe-return/audio/safe-return-ch1-porch-light.mp3',
     duration: 1208.76,
     credit: 'AI narration',
-    note: 'AI-generated narration of the unchanged Chapter 1 text, produced locally with Qwen3-TTS 1.7B using original synthetic voices.'
+    note: ''
   },
   video: { src: '', poster: '', captions: '', captionsLang: 'en', title: '', transcriptUrl: '' }
 };
